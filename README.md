@@ -26,7 +26,7 @@ Build Ubuntu
 ------------
 
 ```
-apt install gcc g++ cmake pkg-config libssl-dev
+apt install gcc g++ cmake pkg-config libssl-dev libpqxx-dev
 cmake .
 make
 ./build/mutable

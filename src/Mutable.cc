@@ -10,17 +10,37 @@ using json = nlohmann::json;
 using std::cout;
 using std::endl;
 
+#include <stdexcept>
+
+extern char **environ;
+
+#include "clients/PostgresClient.h"
+using ::mtbl::client::PostgresClient;
+
+#include "chains/mutable/MutableChain.h"
+using mtbl::chains::mtbl::MutableChain;
+
+
 
 namespace mtbl{
 
 	Mutable::Mutable( int, char** ){
 
+		this->loadEnvironmentVariables();
 
 	}
 
 
 
-	void Mutable::run(){
+	bool Mutable::run(){
+
+		PostgresClient postgres_client( this->getEnvironmentVariable("POSTGRES_CONNECTION") );
+		
+
+		MutableChain mutable_chain( postgres_client );
+
+		mutable_chain.runMutations( 0, 1 );
+
 
 		json running_dialogue{
 			{ "hey", "there" },
@@ -30,7 +50,56 @@ namespace mtbl{
 
 		cout << running_dialogue.dump(4) << endl;
 
+		return true;
+
 	}
+
+
+
+
+	void Mutable::loadEnvironmentVariables(){
+
+		int i = 0;
+		while( environ[i] ){
+
+			string environment_line( environ[i] ); // in the form of "variable=value"
+			i++;
+
+			std::string::size_type n = environment_line.find('=');
+
+			if( n == std::string::npos ){
+				//not found
+				throw std::runtime_error("Unexpected environment format.");
+			} else {				
+				string variable_name = environment_line.substr(0, n);
+				string variable_value = environment_line.substr(n + 1);
+				this->environment_variables.insert( std::pair<string,string>(variable_name, variable_value) );
+			}
+
+		}
+
+	}
+
+
+
+	string Mutable::getEnvironmentVariable( const string& variable_name ) const{
+
+		if( this->environment_variables.count(variable_name) != 0 ){
+			return this->environment_variables.at(variable_name);
+		}
+
+		return "";
+
+	}
+
+
+
+	void Mutable::setEnvironmentVariable( const string& variable_name, const string& variable_value ){
+
+		this->environment_variables.insert( std::pair<string,string>(variable_name,variable_value) );
+
+	}
+
 
 
 }

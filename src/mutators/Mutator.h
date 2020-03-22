@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+using std::string;
+
+
 namespace mtbl{
 
 namespace mutator{
@@ -11,22 +15,30 @@ namespace mutator{
 	*/
 	class Mutator{
 
-		virtual bool beforeMutateForward();
-		virtual bool mutateForward();
-		virtual bool afterMutateForward();
+		public:
 
-		virtual bool beforeMutateBackward();
-		virtual bool mutateBackward();
-		virtual bool afterMutateBackward();
+			virtual bool beforeMutateForward();
+			virtual bool mutateForward();
+			virtual bool afterMutateForward();
 
-		virtual bool onErrorMutateForward();
-		virtual bool onSuccessMutateForward();
+			virtual bool beforeMutateBackward();
+			virtual bool mutateBackward();
+			virtual bool afterMutateBackward();
 
-		virtual bool onErrorMutateBackward();
-		virtual bool onSuccessMutateBackward();		
+			virtual bool onErrorMutateForward();
+			virtual bool onSuccessMutateForward();
 
-		virtual bool onError();
-		virtual bool onSuccess();
+			virtual bool onErrorMutateBackward();
+			virtual bool onSuccessMutateBackward();		
+
+			virtual bool onError();
+			virtual bool onSuccess();
+
+
+		protected:
+			string chain_name;
+			int64_t chain_ordinal = 0;
+
 
 	};
 

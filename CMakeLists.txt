@@ -30,6 +30,8 @@ set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/build )
 
 
 set( MUTABLE_LIBS
+    pqxx
+    pq    
     crypto
     ${OPENSSL_LIBRARIES}
 )
@@ -38,7 +40,13 @@ set( MUTABLE_LIBRARY_SOURCES
 
     src/Mutable.cc
 
+    src/clients/PostgresClient.cc
+
     src/mutators/Mutator.cc
+
+    src/chains/Chain.cc
+
+    src/chains/mutable/MutableChain.cc
 
 )
 
