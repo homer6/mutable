@@ -10,24 +10,20 @@ Mutable is designed to work with kubernetes and works with postgres, mongodb, re
 
 
 
-Build MacOS
------------
-
-```
-brew install openssl
-brew unlink openssl && brew link openssl --force
-cmake .
-make
-./build/mutable
-```
-
-
-Build Ubuntu
-------------
+Build Ubuntu 18
+---------------
 
 ```
 apt install gcc g++ cmake pkg-config libssl-dev libpqxx-dev
 cmake .
 make
+```
+
+
+Running 
+-------
+
+```
+export POSTGRES_CONNECTION="postgresql://username@localhost/dbname?connect_timeout=10&application_name=myapp&ssl=true"
 ./build/mutable
 ```

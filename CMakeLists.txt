@@ -10,7 +10,7 @@ set( MUTABLE_COMPILE_OPTIONS
     -Wall
     -Wextra
     -O3
-    -std=c++17
+    -std=c++14
 )
 
 
