@@ -34,12 +34,15 @@ namespace mtbl{
 
 	bool Mutable::run(){
 
+		/*
 		PostgresClient postgres_client( this->getEnvironmentVariable("POSTGRES_CONNECTION") );
 		
 
 		MutableChain mutable_chain( postgres_client );
 
 		mutable_chain.runMutations( 0, 1 );
+
+		*/
 
 
 		json running_dialogue{
