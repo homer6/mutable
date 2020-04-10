@@ -14,7 +14,7 @@ Build Ubuntu 18
 ---------------
 
 ```
-apt install gcc g++ cmake pkg-config libssl-dev libpqxx-dev
+sudo apt install gcc g++ cmake pkg-config libssl-dev libpqxx-dev libsasl2-dev
 cmake .
 make
 ```
