@@ -32,7 +32,7 @@ jobs:
           command: 'cmake .'
       - run:
           name: Creating Binary Files
-          command: 'make'
+          command: 'make -j4'
 #      - run:
 #          name: Run Binary
 #          command: './build/mutable'
