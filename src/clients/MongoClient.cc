@@ -39,6 +39,16 @@ namespace client{
 
 	}
 
+	void MongoClient::listDatabases(){
+
+		auto cursor = this->mongo_connection.list_databases( *this->client_session );
+
+		for( auto&& doc : cursor ){
+			std::cout << bsoncxx::to_json(doc) << std::endl;
+		}
+
+	}
+
 
 }
 }

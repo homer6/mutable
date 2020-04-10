@@ -40,7 +40,7 @@ namespace mtbl{
 		MongoClient mongo_client( this->getEnvironmentVariable("MONGO_CONNECTION") );
 
 		mongo_client.test();
-
+		mongo_client.listDatabases();
 
 		/*
 		PostgresClient postgres_client( this->getEnvironmentVariable("POSTGRES_CONNECTION") );

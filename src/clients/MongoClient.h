@@ -31,6 +31,9 @@ namespace client{
 	Note that client is not thread-safe. 
 	See https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
 
+
+	API Docs: http://mongocxx.org/api/mongocxx-3.4.1/namespaces.html
+
 	*/
 
 	class MongoClient{
@@ -39,6 +42,7 @@ namespace client{
 			MongoClient( const string connection_string );
 
 			void test();
+			void listDatabases();
 
 			mongocxx::client mongo_connection;
 			unique_ptr<mongocxx::client_session> client_session;
