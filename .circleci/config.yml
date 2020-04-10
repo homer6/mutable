@@ -17,7 +17,16 @@ jobs:
           command: 'apt-get update && apt-get install -y gcc g++'
       - run:
           name: Install CMAKE
-          command: 'apt-get update && sudo apt-get install -y cmake pkg-config libssl-dev libpqxx-dev'
+          command: 'apt-get update && sudo apt-get install -y cmake pkg-config libssl-dev libpqxx-dev libsasl2-dev python'
+      - run:
+          name: Update submodules
+          command: 'git submodule update --init --recursive'
+      - run:
+          name: Build libmongoc
+          command: 'python build/calc_release_version.py > VERSION_CURRENT && mkdir cmake-build && cd cmake-build && cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF .. && sudo make -j4 install && cd ../../..'
+      - run:
+          name: Build mongocxx
+          command: 'cd lib/mongocxx-driver/build && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local && sudo make -j4 install && cd ../../..'
       - run:
           name: Creating Build Files
           command: 'cmake .'
@@ -27,4 +36,3 @@ jobs:
 #      - run:
 #          name: Run Binary
 #          command: './build/mutable'
-
