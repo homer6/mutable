@@ -15,8 +15,10 @@ set( MUTABLE_COMPILE_OPTIONS
 
 
 if( OPENSSL_FOUND )
-	include_directories(
+	include_directories(        
 	    src
+        /usr/local/include/mongocxx/v_noabi
+        /usr/local/include/bsoncxx/v_noabi
 	    ${OPENSSL_INCLUDE_DIRS}
 	)
 	link_directories( ${OPENSSL_LIBRARY_DIRS} ) 
@@ -48,6 +50,7 @@ set( MUTABLE_LIBRARY_SOURCES
     src/Mutable.cc
 
     src/clients/PostgresClient.cc
+    src/clients/MongoClient.cc
 
     src/mutators/Mutator.cc
 

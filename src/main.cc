@@ -5,6 +5,8 @@ using std::endl;
 
 #include "Mutable.h"
 
+#include <mongocxx/instance.hpp>
+
 #include <stdexcept>
 
 
@@ -12,6 +14,8 @@ int main( int argc, char** argv ){
 	
 
 	try{
+
+		mongocxx::instance mongo_instance{}; //must be initialized exactly once in a program
 
 		mtbl::Mutable mtbl( argc, argv );
 

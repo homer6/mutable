@@ -17,6 +17,9 @@ extern char **environ;
 #include "clients/PostgresClient.h"
 using ::mtbl::client::PostgresClient;
 
+#include "clients/MongoClient.h"
+using ::mtbl::client::MongoClient;
+
 #include "chains/mutable/MutableChain.h"
 using mtbl::chains::mtbl::MutableChain;
 
@@ -34,6 +37,12 @@ namespace mtbl{
 
 	bool Mutable::run(){
 
+		MongoClient mongo_client( this->getEnvironmentVariable("MONGO_CONNECTION") );
+
+		mongo_client.test();
+
+
+		/*
 		PostgresClient postgres_client( this->getEnvironmentVariable("POSTGRES_CONNECTION") );
 		
 
@@ -49,6 +58,7 @@ namespace mtbl{
 		};
 
 		cout << running_dialogue.dump(4) << endl;
+		*/
 
 		return true;
 
