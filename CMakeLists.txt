@@ -34,6 +34,13 @@ set( MUTABLE_LIBS
     pq    
     crypto
     ${OPENSSL_LIBRARIES}
+
+    mongocxx
+    bsoncxx
+    sasl2
+    ssl
+    pthread
+
 )
 
 set( MUTABLE_LIBRARY_SOURCES
