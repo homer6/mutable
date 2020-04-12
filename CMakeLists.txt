@@ -52,6 +52,8 @@ set( MUTABLE_LIBRARY_SOURCES
     src/clients/PostgresClient.cc
     src/clients/MongoClient.cc
 
+    src/utils/File.cc
+
     src/mutators/Mutator.cc
 
     src/chains/Chain.cc
