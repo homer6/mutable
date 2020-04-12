@@ -14,7 +14,7 @@ namespace utils{
 	json file_get_json( const string& filename );
 	void file_write_json( const string& filename, const json& json, size_t indent = 4 );
 
-	json sort_json_array( json& input_json_array, const string sort_field );
+	json sort_json_array( const json& input_json_array, const string sort_field );
 
 }
 }

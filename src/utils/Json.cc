@@ -25,13 +25,13 @@ namespace utils{
 
 
 
-	json sort_json_array( json& input_json_array, const string sort_field ){
+	json sort_json_array( const json& input_json_array, const string sort_field ){
 
 		json array_sorted = json::array();
 
 		map<string,json> json_map;
 
-		for( json& object : input_json_array ){
+		for( const json& object : input_json_array ){
 
 			if( object.count(sort_field) ){
 
