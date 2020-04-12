@@ -13,8 +13,6 @@ namespace utils{
 	string file_get_contents( const string& filename );
 	bool file_remove( const string& filename );
 
-	json file_get_json( const string& filename );
-
 
 	class File{
 

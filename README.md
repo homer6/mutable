@@ -33,6 +33,8 @@ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
 sudo make -j12 install
 cd ../../..
 
+ldconfig
+
 cmake .
 make -j12
 ```

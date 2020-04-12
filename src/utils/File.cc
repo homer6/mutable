@@ -39,11 +39,6 @@ namespace utils{
 	}
 
 
-	json file_get_json( const string& filename ){
-
-		return json::parse( file_get_contents(filename) );
-
-	}
 
 
 

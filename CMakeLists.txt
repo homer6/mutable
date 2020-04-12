@@ -53,6 +53,7 @@ set( MUTABLE_LIBRARY_SOURCES
     src/clients/MongoClient.cc
 
     src/utils/File.cc
+    src/utils/Json.cc
 
     src/mutators/Mutator.cc
 
