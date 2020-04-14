@@ -14,7 +14,7 @@ Build Ubuntu 18
 ---------------
 
 ```
-sudo apt install git gcc g++ cmake pkg-config libssl-dev libpqxx-dev libsasl2-dev python
+sudo apt install git gcc g++ cmake pkg-config libssl-dev libpqxx-dev libsasl2-dev python ccache
 git clone --recursive https://github.com/homer6/mutable.git
 cd mutable
 
