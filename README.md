@@ -14,7 +14,7 @@ Build Ubuntu 18
 ---------------
 
 ```
-sudo apt install git gcc g++ cmake pkg-config libssl-dev libpqxx-dev libsasl2-dev python ccache libmysqlcppconn-dev libmysqlclient libmysqlclient-dev
+sudo apt install git gcc g++ cmake pkg-config libssl-dev libsasl2-dev python ccache libmysqlcppconn-dev libmysqlclient libmysqlclient-dev libpq-dev
 git clone --recursive https://github.com/homer6/mutable.git
 cd mutable
 
@@ -30,6 +30,13 @@ cd ../../..
 cd lib/mongocxx-driver/build
 git checkout debian/3.4.1-1
 cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
+sudo make -j12 install
+cd ../../..
+
+cd lib/libpqxx
+git checkout 7.0.5
+mkdir build
+cmake -DPostgreSQL_TYPE_INCLUDE_DIR:STRING=/usr/include/postgresql ..
 sudo make -j12 install
 cd ../../..
 

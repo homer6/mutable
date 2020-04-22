@@ -7,7 +7,7 @@ namespace mtbl{
 namespace client{
 
 	MysqlClient::MysqlClient( const string& hostname, unsigned int port, const string& username, const string& password, const string& dbname, unsigned int timeout, bool auto_reconnect )
-		:connection( connect_options{ hostname, username, password, dbname, timeout, auto_reconnect, "", "", port } )
+		:connection( daotk::mysql::connect_options{ hostname, username, password, dbname, timeout, auto_reconnect, "", "", port } )
 	{
 
 		if( !this->connection ){

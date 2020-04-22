@@ -18,7 +18,7 @@ namespace mtbl{
 			Mutable( int argc, char** argv );
 
 			void loadEnvironmentVariables();
-			string getEnvironmentVariable( const string& variable_name ) const;
+			string getEnvironmentVariable( const string& variable_name, const string& default_value = "" ) const;
 			void setEnvironmentVariable( const string& variable_name, const string& variable_value );
 
 			bool run();

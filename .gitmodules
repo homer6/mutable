@@ -7,3 +7,6 @@
 [submodule "lib/mysql-modern-cpp"]
 	path = lib/mysql-modern-cpp
 	url = https://github.com/daotrungkien/mysql-modern-cpp.git
+[submodule "lib/libpqxx"]
+	path = lib/libpqxx
+	url = https://github.com/jtv/libpqxx.git

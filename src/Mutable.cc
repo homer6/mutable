@@ -51,7 +51,7 @@ namespace mtbl{
 
 		MysqlClient mysql_client( 
 			this->getEnvironmentVariable("MYSQL_HOST"),
-			std::stol(std:: this->getEnvironmentVariable("MYSQL_PORT", "3306")),
+			std::stol( this->getEnvironmentVariable("MYSQL_PORT", "3306") ),
 			this->getEnvironmentVariable("MYSQL_USERNAME"),
 			this->getEnvironmentVariable("MYSQL_PASSWORD"),
 			this->getEnvironmentVariable("MYSQL_DATABASE")
@@ -109,13 +109,13 @@ namespace mtbl{
 
 
 
-	string Mutable::getEnvironmentVariable( const string& variable_name ) const{
+	string Mutable::getEnvironmentVariable( const string& variable_name, const string& default_value ) const{
 
 		if( this->environment_variables.count(variable_name) != 0 ){
 			return this->environment_variables.at(variable_name);
 		}
 
-		return "";
+		return default_value;
 
 	}
 

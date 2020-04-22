@@ -51,6 +51,7 @@ set( MUTABLE_LIBS
     ssl
     pthread
 
+    mysqlclient
     mysqlcppconn
 
 )
@@ -61,10 +62,7 @@ set( MUTABLE_LIBRARY_SOURCES
 
     src/clients/PostgresClient.cc
     src/clients/MongoClient.cc
-    
-    #src/clients/MysqlClient.cc
-    #src/clients/mysql/Connection.cc
-
+    src/clients/MysqlClient.cc
 
     src/utils/File.cc
     src/utils/Json.cc
