@@ -17,7 +17,7 @@ set( MUTABLE_COMPILE_OPTIONS
     -Wall
     -Wextra
     -O3
-    -std=c++14
+    -std=c++17
 )
 
 
@@ -27,6 +27,7 @@ if( OPENSSL_FOUND )
         /usr/local/include/mongocxx/v_noabi
         /usr/local/include/bsoncxx/v_noabi
 	    ${OPENSSL_INCLUDE_DIRS}
+        lib/mysql-modern-cpp
 	)
 	link_directories( ${OPENSSL_LIBRARY_DIRS} ) 
 else()
@@ -50,6 +51,8 @@ set( MUTABLE_LIBS
     ssl
     pthread
 
+    mysqlcppconn
+
 )
 
 set( MUTABLE_LIBRARY_SOURCES
@@ -58,6 +61,10 @@ set( MUTABLE_LIBRARY_SOURCES
 
     src/clients/PostgresClient.cc
     src/clients/MongoClient.cc
+    
+    #src/clients/MysqlClient.cc
+    #src/clients/mysql/Connection.cc
+
 
     src/utils/File.cc
     src/utils/Json.cc

@@ -20,9 +20,11 @@ using ::mtbl::client::PostgresClient;
 #include "clients/MongoClient.h"
 using ::mtbl::client::MongoClient;
 
+#include "clients/MysqlClient.h"
+using ::mtbl::client::MysqlClient;
+
 #include "chains/mutable/MutableChain.h"
 using mtbl::chains::mtbl::MutableChain;
-
 
 
 namespace mtbl{
@@ -37,10 +39,25 @@ namespace mtbl{
 
 	bool Mutable::run(){
 
+		/*
+
 		MongoClient mongo_client( this->getEnvironmentVariable("MONGO_CONNECTION") );
 
 		mongo_client.test();
 		mongo_client.listDatabases();
+
+		*/
+
+
+		MysqlClient mysql_client( 
+			this->getEnvironmentVariable("MYSQL_HOST"),
+			std::stol(std:: this->getEnvironmentVariable("MYSQL_PORT", "3306")),
+			this->getEnvironmentVariable("MYSQL_USERNAME"),
+			this->getEnvironmentVariable("MYSQL_PASSWORD"),
+			this->getEnvironmentVariable("MYSQL_DATABASE")
+		);
+
+
 
 		/*
 		PostgresClient postgres_client( this->getEnvironmentVariable("POSTGRES_CONNECTION") );
