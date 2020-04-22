@@ -14,7 +14,7 @@ Build Ubuntu 18
 ---------------
 
 ```
-sudo apt install git gcc g++ cmake pkg-config libssl-dev libsasl2-dev python ccache libmysqlcppconn-dev libmysqlclient libmysqlclient-dev libpq-dev
+sudo apt install git gcc g++ cmake pkg-config libssl-dev libsasl2-dev python ccache libmysqlcppconn-dev libmysqlclient-dev libpq-dev
 git clone --recursive https://github.com/homer6/mutable.git
 cd mutable
 
