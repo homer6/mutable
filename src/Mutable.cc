@@ -49,6 +49,7 @@ namespace mtbl{
 		*/
 
 
+		/*
 		MysqlClient mysql_client( 
 			this->getEnvironmentVariable("MYSQL_HOST"),
 			std::stol( this->getEnvironmentVariable("MYSQL_PORT", "3306") ),
@@ -57,6 +58,15 @@ namespace mtbl{
 			this->getEnvironmentVariable("MYSQL_DATABASE")
 		);
 
+		mysql_client.executeStatement( R"MTBL_STATEMENT(
+			CREATE TABLE pet (
+				name VARCHAR(20), 
+				owner VARCHAR(20), 
+				species VARCHAR(20), 
+				gender CHAR(1)
+			);
+		)MTBL_STATEMENT" );
+		*/
 
 
 		/*

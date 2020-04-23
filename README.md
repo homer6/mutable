@@ -53,5 +53,9 @@ Running
 ```
 export POSTGRES_CONNECTION="postgresql://username@localhost/dbname?connect_timeout=10&application_name=myapp&ssl=true"
 export MONGO_CONNECTION="mongodb://localhost/"
+
+export MYSQL_USERNAME=root
+export MYSQL_DATABASE=temp
+
 ./build/mutable
 ```

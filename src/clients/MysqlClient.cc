@@ -19,5 +19,16 @@ namespace client{
 
 	}
 
+
+
+	void MysqlClient::executeStatement( const string& statement ){
+
+		this->connection.exec( statement );
+
+	}
+
+
+
+
 }
 }
