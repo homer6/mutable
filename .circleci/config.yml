@@ -28,6 +28,9 @@ jobs:
           name: Build mongocxx
           command: 'cd lib/mongocxx-driver/build && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local && sudo make -j4 install && cd ../../..'
       - run:
+          name: Build pqxx
+          command: 'cd lib/libpqxx && mkdir build && cmake -DPostgreSQL_TYPE_INCLUDE_DIR:STRING=/usr/include/postgresql .. && sudo make -j4 install && cd ../../..'
+      - run:
           name: Creating Build Files
           command: 'cmake .'
       - run:
