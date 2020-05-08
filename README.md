@@ -6,7 +6,7 @@ Overview
 
 Mutable allows you to make schema migrations (schema mutations), data mutations (data migrations), and other mutations in a clean and modern way.
 
-Mutable is designed to work with kubernetes and works with postgres, mongodb, redis, and can support other datastores.
+Mutable is designed to work with kubernetes and works with postgres, mongodb, mysql, and can support other datastores upon request.
 
 
 
