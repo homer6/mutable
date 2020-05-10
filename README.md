@@ -58,6 +58,22 @@ docker build -t mutable_build -f Dockerfile.build .
 docker build -t mutable -f Dockerfile.run .
 ```
 
+Publishing to dockerhub (after building)
+----------------------------------------
+
+```
+docker login
+
+docker tag mutable_base:latest homer6/mutable_base:v1
+docker tag mutable_build:latest homer6/mutable_build:v1
+docker tag mutable:latest homer6/mutable:latest
+
+docker push homer6/mutable_base:v1
+docker push homer6/mutable_build:v1
+docker push homer6/mutable:latest
+```
+
+
 
 Connecting to Buildtime Docker Container
 --------------------------------------
@@ -73,6 +89,7 @@ Connecting to Runtime Docker Container
 ```
 docker run -it mutable /bin/ash
 ```
+
 
 
 
