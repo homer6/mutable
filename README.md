@@ -121,5 +121,5 @@ export MONGO_CONNECTION="mongodb://localhost/"
 export MYSQL_USERNAME=root
 export MYSQL_DATABASE=temp
 
-docker run --env POSTGRES_CONNECTION --env MONGO_CONNECTION --env MYSQL_USERNAME --env MYSQL_DATABASE mutable 
+docker run --env POSTGRES_CONNECTION --env MONGO_CONNECTION --env MYSQL_USERNAME --env MYSQL_DATABASE homer6/mutable 
 ```
