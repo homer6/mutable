@@ -4,6 +4,7 @@
 using json = nlohmann::json;
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
+#define CPPHTTPLIB_ZLIB_SUPPORT
 #include "httplib.hpp"
 
 #include <iostream>
@@ -26,6 +27,8 @@ using ::mtbl::client::MysqlClient;
 #include "chains/mutable/MutableChain.h"
 using mtbl::chains::mtbl::MutableChain;
 
+#include <cppkafka/cppkafka.h>
+
 
 namespace mtbl{
 
@@ -39,7 +42,28 @@ namespace mtbl{
 
 	bool Mutable::run(){
 
+		json running_dialogue{
+			{ "hey", "there" },
+			{ "how", "are" },
+			{ "you", "!" }
+		};
+
 		/*
+
+		cppkafka::Configuration config = {
+			{ "metadata.broker.list", this->getEnvironmentVariable("BROKER_LIST", "127.0.0.1:9092") }
+		};
+
+		cppkafka::Producer producer(config);
+
+		const string message_contents = running_dialogue.dump();
+		producer.produce( cppkafka::MessageBuilder("my_topic").partition(-1).payload(message_contents) );
+		producer.flush();
+
+
+
+
+		
 
 		MongoClient mongo_client( this->getEnvironmentVariable("MONGO_CONNECTION") );
 
@@ -79,12 +103,6 @@ namespace mtbl{
 
 		*/
 		
-		json running_dialogue{
-			{ "hey", "there" },
-			{ "how", "are" },
-			{ "you", "!" }
-		};
-
 		cout << running_dialogue.dump(4) << endl;
 		
 

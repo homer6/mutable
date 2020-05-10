@@ -10,3 +10,9 @@
 [submodule "lib/libpqxx"]
 	path = lib/libpqxx
 	url = https://github.com/jtv/libpqxx.git
+[submodule "lib/librdkafka"]
+	path = lib/librdkafka
+	url = https://github.com/edenhill/librdkafka.git
+[submodule "lib/cppkafka"]
+	path = lib/cppkafka
+	url = https://github.com/mfontanini/cppkafka.git

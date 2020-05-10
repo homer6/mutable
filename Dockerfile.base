@@ -34,7 +34,25 @@ RUN cd lib/libpqxx && \
     cd build && \
     cmake -DPostgreSQL_TYPE_INCLUDE_DIR:STRING=/usr/include/postgresql .. && \
     make -j4 install && \
-    cd ../../..
+    cd ../../.. && \
+    ldconfig
+
+RUN apt install -y libssl-dev libboost-all-dev libsasl2-dev liblz4-dev libzstd-dev && \
+    cd lib/librdkafka && \
+    git checkout v1.4.2 && \
+    ./configure --install-deps && \
+    make -j4 && \
+    make install && \
+    ldconfig && \
+    cd ../..
+
+RUN cd lib/cppkafka && \
+    git checkout 006642cdb2a871ef3aad517e9148607b859604e0 && \
+    cmake . && \
+    make -j4 && \
+    make install && \
+    ldconfig && \
+    cd ../..
 
 RUN rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake
 

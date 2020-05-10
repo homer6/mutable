@@ -12,6 +12,11 @@ if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
 endif(CCACHE_FOUND)
 
+FIND_LIBRARY(RDKAFKA rdkafka /usr/local/lib NO_DEFAULT_PATH)
+FIND_LIBRARY(CPPKAFKA cppkafka /usr/local/lib NO_DEFAULT_PATH)
+
+link_libraries(${RDKAFKA} ${CPPKAFKA})
+
 
 set( MUTABLE_COMPILE_OPTIONS
     -Wall
@@ -54,6 +59,11 @@ set( MUTABLE_LIBS
     mysqlclient
     mysqlcppconn
 
+    rdkafka
+    cppkafka
+    pthread
+    dl
+    z
 )
 
 set( MUTABLE_LIBRARY_SOURCES

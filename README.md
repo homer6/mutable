@@ -39,8 +39,24 @@ mkdir build
 cmake -DPostgreSQL_TYPE_INCLUDE_DIR:STRING=/usr/include/postgresql ..
 sudo make -j12 install
 cd ../../..
-
 ldconfig
+
+sudo apt install -y libssl-dev libboost-all-dev libsasl2-dev liblz4-dev libzstd-dev
+cd lib/librdkafka
+git checkout v1.4.2
+./configure --install-deps
+make -j12
+make install
+ldconfig
+cd ../..
+
+cd lib/cppkafka
+git checkout 006642cdb2a871ef3aad517e9148607b859604e0
+cmake .
+make -j12
+make install
+ldconfig
+cd ../..
 
 cmake .
 make -j12
@@ -64,12 +80,12 @@ Publishing to dockerhub (after building)
 ```
 docker login
 
-docker tag mutable_base:latest homer6/mutable_base:v1
-docker tag mutable_build:latest homer6/mutable_build:v1
+docker tag mutable_base:latest homer6/mutable_base:v2
+docker tag mutable_build:latest homer6/mutable_build:v2
 docker tag mutable:latest homer6/mutable:latest
 
-docker push homer6/mutable_base:v1
-docker push homer6/mutable_build:v1
+docker push homer6/mutable_base:v2
+docker push homer6/mutable_build:v2
 docker push homer6/mutable:latest
 ```
 
@@ -121,5 +137,13 @@ export MONGO_CONNECTION="mongodb://localhost/"
 export MYSQL_USERNAME=root
 export MYSQL_DATABASE=temp
 
-docker run --env POSTGRES_CONNECTION --env MONGO_CONNECTION --env MYSQL_USERNAME --env MYSQL_DATABASE homer6/mutable 
+export BROKER_LIST="127.0.0.1:9092"
+
+docker run
+	--env POSTGRES_CONNECTION \
+	--env MONGO_CONNECTION \
+	--env MYSQL_USERNAME \
+	--env MYSQL_DATABASE \
+	--env BROKER_LIST \	
+	homer6/mutable 
 ```
