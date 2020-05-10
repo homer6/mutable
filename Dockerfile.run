@@ -1,0 +1,37 @@
+FROM mutable_base
+
+COPY CMakeLists.txt /mutable
+RUN rm -rf /mutable/src
+COPY src /mutable/src
+WORKDIR /mutable
+
+RUN rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake
+RUN ldconfig && cmake . && make -j4
+
+
+
+FROM alpine as certs
+RUN apk update && apk add ca-certificates
+
+
+
+FROM busybox:glibc
+COPY --from=certs /etc/ssl/certs /etc/ssl/certs
+WORKDIR /root
+
+COPY --from=0 /usr/lib/x86_64-linux-gnu/libssl.so.1.1 /lib
+COPY --from=0 /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 /lib
+COPY --from=0 /usr/local/lib/libmongocxx.so._noabi /lib
+COPY --from=0 /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /lib
+COPY --from=0 /lib/x86_64-linux-gnu/libgcc_s.so.1 /lib
+COPY --from=0 /lib/x86_64-linux-gnu/libdl.so.2 /lib
+COPY --from=0 /usr/local/lib/libbsoncxx.so._noabi /lib
+COPY --from=0 /usr/local/lib/libmongoc-1.0.so.0 /lib
+COPY --from=0 /usr/local/lib/libbson-1.0.so.0 /lib
+COPY --from=0 /usr/lib/x86_64-linux-gnu/libsasl2.so.2 /lib
+COPY --from=0 /lib/x86_64-linux-gnu/librt.so.1 /lib
+COPY --from=0 /lib/x86_64-linux-gnu/libz.so.1 /lib
+
+COPY --from=0 /mutable/build/mutable .
+
+CMD [ "./mutable" ]

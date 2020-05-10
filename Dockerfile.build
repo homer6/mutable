@@ -1,0 +1,12 @@
+FROM mutable_base
+
+COPY CMakeLists.txt /mutable
+RUN rm -rf /mutable/src
+COPY src /mutable/src
+WORKDIR /mutable
+
+RUN rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake
+RUN ldconfig && cmake . && make -j4
+
+
+ENTRYPOINT [ "/bin/bash" ]

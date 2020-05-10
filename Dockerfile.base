@@ -1,0 +1,44 @@
+FROM ubuntu:bionic
+
+COPY . /mutable
+WORKDIR /mutable
+
+RUN apt update -y && \
+    apt install -y git gcc g++ cmake pkg-config libssl-dev libsasl2-dev \
+                   python ccache libmysqlcppconn-dev libmysqlclient-dev \
+                   libpq-dev
+
+RUN git submodule update --init --recursive
+
+RUN cd lib/libmongoc && \
+    git checkout debian/1.15.2-1 && \
+    python build/calc_release_version.py > VERSION_CURRENT && \
+    rm -rf cmake-build && \
+    mkdir -p cmake-build && \
+    cd cmake-build && \
+    cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF .. && \
+    make -j4 install && \
+    cd ../../..
+
+RUN cd lib/mongocxx-driver/build && \
+    git checkout debian/3.4.1-1 && \
+    rm -rf * && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local && \
+    make -j4 install && \
+    cd ../../..
+
+RUN cd lib/libpqxx && \
+    git checkout 7.0.5 && \
+    rm -rf build && \
+    mkdir build && \
+    cd build && \
+    cmake -DPostgreSQL_TYPE_INCLUDE_DIR:STRING=/usr/include/postgresql .. && \
+    make -j4 install && \
+    cd ../../..
+
+RUN rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake
+
+RUN ldconfig && cmake . && make -j4
+RUN rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT [ "/bin/bash" ]

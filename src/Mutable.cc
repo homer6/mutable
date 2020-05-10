@@ -77,7 +77,8 @@ namespace mtbl{
 
 		mutable_chain.runMutations( 0, 1 );
 
-
+		*/
+		
 		json running_dialogue{
 			{ "hey", "there" },
 			{ "how", "are" },
@@ -85,7 +86,7 @@ namespace mtbl{
 		};
 
 		cout << running_dialogue.dump(4) << endl;
-		*/
+		
 
 		return true;
 

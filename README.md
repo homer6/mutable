@@ -47,8 +47,40 @@ make -j12
 ```
 
 
-Running 
--------
+Building Docker
+---------------
+
+```
+apt install -y docker.io
+
+docker build -t mutable_base -f Dockerfile.base .
+docker build -t mutable_build -f Dockerfile.build .
+docker build -t mutable -f Dockerfile.run .
+```
+
+
+Connecting to Buildtime Docker Container
+--------------------------------------
+
+```
+docker run -it mutable_build
+```
+
+
+Connecting to Runtime Docker Container
+--------------------------------------
+
+```
+docker run -it mutable /bin/ash
+```
+
+
+
+
+
+
+Running (Locally)
+-----------------
 
 ```
 export POSTGRES_CONNECTION="postgresql://username@localhost/dbname?connect_timeout=10&application_name=myapp&ssl=true"
@@ -58,4 +90,19 @@ export MYSQL_USERNAME=root
 export MYSQL_DATABASE=temp
 
 ./build/mutable
+```
+
+
+
+Running (Docker)
+----------------
+
+```
+export POSTGRES_CONNECTION="postgresql://username@localhost/dbname?connect_timeout=10&application_name=myapp&ssl=true"
+export MONGO_CONNECTION="mongodb://localhost/"
+
+export MYSQL_USERNAME=root
+export MYSQL_DATABASE=temp
+
+docker run --env POSTGRES_CONNECTION --env MONGO_CONNECTION --env MYSQL_USERNAME --env MYSQL_DATABASE mutable 
 ```
