@@ -139,11 +139,11 @@ export MYSQL_DATABASE=temp
 
 export BROKER_LIST="127.0.0.1:9092"
 
-docker run
+docker run \
 	--env POSTGRES_CONNECTION \
 	--env MONGO_CONNECTION \
 	--env MYSQL_USERNAME \
 	--env MYSQL_DATABASE \
-	--env BROKER_LIST \	
+	--env BROKER_LIST \
 	homer6/mutable 
 ```
