@@ -122,6 +122,8 @@ export MONGO_CONNECTION="mongodb://localhost/"
 export MYSQL_USERNAME=root
 export MYSQL_DATABASE=temp
 
+export ENVIRONMENT_PREFIX="testing"
+
 ./build/mutable
 ```
 
@@ -139,11 +141,14 @@ export MYSQL_DATABASE=temp
 
 export BROKER_LIST="127.0.0.1:9092"
 
+export ENVIRONMENT_PREFIX="testing"
+
 docker run \
 	--env POSTGRES_CONNECTION \
 	--env MONGO_CONNECTION \
 	--env MYSQL_USERNAME \
 	--env MYSQL_DATABASE \
 	--env BROKER_LIST \
+	--env ENVIRONMENT_PREFIX \
 	homer6/mutable 
 ```

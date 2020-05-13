@@ -9,6 +9,9 @@ using std::map;
 #include <vector>
 using std::vector;
 
+#include "json.hpp"
+using json = nlohmann::json;
+
 
 namespace mtbl{
 
@@ -23,10 +26,37 @@ namespace mtbl{
 
 			bool run();
 
+			void publishKafkaMessage( const string topic, const json& message ) const;
 
 
 		protected:
 			map<string,string> environment_variables;
+
+			string environment_prefix;
+
+			string broker_list;
+			string mongo_connection;
+			string mysql_host;
+			string mysql_port;
+			string mysql_username;
+			string mysql_password;
+			string mysql_database;
+			string postgres_connection;
+
+			string command;
+
+			string tail_source;
+
+			string consume_topic;
+			string consume_consumer_group;
+			string consume_type;
+
+			string walk_source;
+			string walk_object;
+
+			string mutate_chain;
+			int32_t mutate_version = -1;
+
 
 	};
 

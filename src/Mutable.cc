@@ -1,14 +1,12 @@
 #include "Mutable.h"
 
-#include "json.hpp"
-using json = nlohmann::json;
-
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #define CPPHTTPLIB_ZLIB_SUPPORT
 #include "httplib.hpp"
 
 #include <iostream>
 using std::cout;
+using std::cerr;
 using std::endl;
 
 #include <stdexcept>
@@ -29,12 +27,92 @@ using mtbl::chains::mtbl::MutableChain;
 
 #include <cppkafka/cppkafka.h>
 
+#include "args.hxx"
+
 
 namespace mtbl{
 
-	Mutable::Mutable( int, char** ){
+	Mutable::Mutable( int argc, char** argv ){
 
 		this->loadEnvironmentVariables();
+
+		args::ArgumentParser arg_parser( "mutable", "https://github.com/homer6/mutable" );
+		
+		args::Group commands( arg_parser, "commands" );
+
+		args::Command tail_command( commands, "tail", "captures data changes (CDC) from a database and sends them to kafka" );
+		args::Positional<string> tail_source( tail_command, "source", "type of database to tail" );
+
+		args::Command consume_command( commands, "consume", "consume from kafka" );
+		args::Positional<string> consume_topic( consume_command, "topic", "topic to consume from" );
+		args::Positional<string> consume_consumer_group( consume_command, "consumer_group", "kafka consumer group" );
+		args::Positional<string> consume_type( consume_command, "type", "type of consumer" );
+
+		args::Command walk_command( commands, "walk", "instruct the walker to walk" );
+		args::Positional<string> walk_source( walk_command, "source", "type of database to walk" );
+		args::Positional<string> walk_object( walk_command, "object", "type of object (table, collection) to walk" );
+
+		args::Command mutate_command( commands, "mutate", "delare a chain to be a mutation state" );
+		args::Positional<string> mutate_chain( mutate_command, "chain", "name of chain to mutate" );
+		args::Positional<int32_t> mutate_version( mutate_command, "version", "declared " );
+
+
+		args::Group arguments( arg_parser, "arguments", args::Group::Validators::DontCare, args::Options::Global );
+		args::HelpFlag help_arguments( arguments, "help", "help", {'h', "help"} );
+
+
+		this->environment_prefix = this->getEnvironmentVariable( "ENVIRONMENT_PREFIX" );
+
+		this->broker_list = this->getEnvironmentVariable( "BROKER_LIST", "127.0.0.1:9092" );
+		this->mongo_connection = this->getEnvironmentVariable( "MONGO_CONNECTION" );
+
+		this->mysql_host = this->getEnvironmentVariable( "MYSQL_HOST" );
+		this->mysql_port = this->getEnvironmentVariable( "MYSQL_PORT" );
+		this->mysql_username = this->getEnvironmentVariable( "MYSQL_USERNAME" );
+		this->mysql_password = this->getEnvironmentVariable( "MYSQL_PASSWORD" );
+		this->mysql_database = this->getEnvironmentVariable( "MYSQL_DATABASE" );
+
+		this->postgres_connection = this->getEnvironmentVariable( "POSTGRES_CONNECTION" );
+
+
+		try{
+
+			arg_parser.ParseCLI(argc, argv);
+
+			if( tail_command ){
+				this->command = "tail";
+				this->tail_source = args::get( tail_source );
+			}
+
+			if( consume_command ){
+				this->command = "consume";
+				this->consume_topic = args::get( consume_topic );
+				this->consume_consumer_group = args::get( consume_consumer_group );
+				this->consume_type = args::get( consume_type );
+			}
+
+			if( walk_command ){
+				this->command = "walk";
+				this->walk_source = args::get( walk_source );
+				this->walk_object = args::get( walk_object );
+			}
+
+			if( mutate_command ){
+				this->command = "mutate";
+				this->mutate_chain = args::get( mutate_chain );
+				this->mutate_version = args::get( mutate_version );
+			}
+
+
+		}catch( args::Help ){
+
+			std::cout << arg_parser;
+
+		}catch( args::Error& e ){
+
+			std::cerr << e.what() << std::endl << arg_parser;			
+
+		}
 
 	}
 
@@ -42,30 +120,53 @@ namespace mtbl{
 
 	bool Mutable::run(){
 
+		
 		json running_dialogue{
 			{ "hey", "there" },
 			{ "how", "are" },
 			{ "you", "!" }
 		};
 
+
+		if( this->command == "mutate" ){
+
+			if( this->mutate_version < 1 ){
+				cerr << "Mutate version must be positive." << endl;
+				return false;
+			}
+
+			json mutation_delcaration{
+				{ "operation", "mutate" },
+				{ "environment_prefix", this->environment_prefix },
+				{ "chain", this->mutate_chain },
+				{ "version", this->mutate_version }
+			};
+
+			this->publishKafkaMessage( "mutable_control", mutation_delcaration );
+
+		}
+
+
+
+		if( this->command == "walk" ){
+
+			json walk_command{
+				{ "operation", "walk" },
+				{ "environment_prefix", this->environment_prefix },
+				{ "source", this->walk_source },
+				{ "object", this->walk_object }
+			};
+
+			this->publishKafkaMessage( "mutable_control", walk_command );
+
+		}
+
+
+
 		/*
 
-		cppkafka::Configuration config = {
-			{ "metadata.broker.list", this->getEnvironmentVariable("BROKER_LIST", "127.0.0.1:9092") }
-		};
 
-		cppkafka::Producer producer(config);
-
-		const string message_contents = running_dialogue.dump();
-		producer.produce( cppkafka::MessageBuilder("my_topic").partition(-1).payload(message_contents) );
-		producer.flush();
-
-
-
-
-		
-
-		MongoClient mongo_client( this->getEnvironmentVariable("MONGO_CONNECTION") );
+		MongoClient mongo_client( this->mongo_connection );
 
 		mongo_client.test();
 		mongo_client.listDatabases();
@@ -75,11 +176,11 @@ namespace mtbl{
 
 		/*
 		MysqlClient mysql_client( 
-			this->getEnvironmentVariable("MYSQL_HOST"),
-			std::stol( this->getEnvironmentVariable("MYSQL_PORT", "3306") ),
-			this->getEnvironmentVariable("MYSQL_USERNAME"),
-			this->getEnvironmentVariable("MYSQL_PASSWORD"),
-			this->getEnvironmentVariable("MYSQL_DATABASE")
+			this->mysql_host
+			std::stol(this->mysql_port),
+			this->mysql_username,
+			this->mysql_password,
+			this->mysql_database
 		);
 
 		mysql_client.executeStatement( R"MTBL_STATEMENT(
@@ -93,8 +194,9 @@ namespace mtbl{
 		*/
 
 
+
 		/*
-		PostgresClient postgres_client( this->getEnvironmentVariable("POSTGRES_CONNECTION") );
+		PostgresClient postgres_client( postgres_connection );
 		
 
 		MutableChain mutable_chain( postgres_client );
@@ -153,6 +255,22 @@ namespace mtbl{
 	void Mutable::setEnvironmentVariable( const string& variable_name, const string& variable_value ){
 
 		this->environment_variables.insert( std::pair<string,string>(variable_name,variable_value) );
+
+	}
+
+
+
+	void Mutable::publishKafkaMessage( const string topic, const json& message ) const{
+
+		cppkafka::Configuration config = {
+			{ "metadata.broker.list", this->broker_list }
+		};
+
+		cppkafka::Producer producer(config);
+
+		const string message_contents = message.dump();
+		producer.produce( cppkafka::MessageBuilder(topic).partition(-1).payload(message_contents) );
+		producer.flush();
 
 	}
 
