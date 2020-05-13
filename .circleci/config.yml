@@ -11,4 +11,4 @@ jobs:
       - checkout
       - run:
           name: Run Binary
-          command: '/mutable/build/mutable'
+          command: '/root/mutable'
