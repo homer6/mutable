@@ -150,5 +150,5 @@ docker run \
 	--env MYSQL_DATABASE \
 	--env BROKER_LIST \
 	--env ENVIRONMENT_PREFIX \
-	homer6/mutable 
+	homer6/mutable
 ```

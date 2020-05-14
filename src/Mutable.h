@@ -46,6 +46,8 @@ namespace mtbl{
 			string command;
 
 			string tail_source;
+			string tail_database;
+			string tail_collection;
 
 			string consume_topic;
 			string consume_consumer_group;
@@ -56,6 +58,8 @@ namespace mtbl{
 
 			string mutate_chain;
 			int32_t mutate_version = -1;
+
+			string test_name;
 
 
 	};

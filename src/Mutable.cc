@@ -45,6 +45,8 @@ namespace mtbl{
 
 		args::Command tail_command( commands, "tail", "captures data changes (CDC) from a database and sends them to kafka" );
 		args::Positional<string> tail_source( tail_command, "source", "type of database to tail" );
+		args::Positional<string> tail_database( tail_command, "database", "the database name to tail" );
+		args::Positional<string> tail_collection( tail_command, "collection", "the collection name to tail" );
 
 		args::Command consume_command( commands, "consume", "consume from kafka" );
 		args::Positional<string> consume_topic( consume_command, "topic", "topic to consume from" );
@@ -59,6 +61,8 @@ namespace mtbl{
 		args::Positional<string> mutate_chain( mutate_command, "chain", "name of chain to mutate" );
 		args::Positional<int32_t> mutate_version( mutate_command, "version", "declared " );
 
+		args::Command test_command( commands, "test", "perform a test" );
+		args::Positional<string> test_name( test_command, "name", "name of the test" );
 
 		args::Group arguments( arg_parser, "arguments", args::Group::Validators::DontCare, args::Options::Global );
 		args::HelpFlag help_arguments( arguments, "help", "help", {'h', "help"} );
@@ -85,6 +89,8 @@ namespace mtbl{
 			if( tail_command ){
 				this->command = "tail";
 				this->tail_source = args::get( tail_source );
+				this->tail_database = args::get( tail_database );
+				this->tail_collection = args::get( tail_collection );
 			}
 
 			if( consume_command ){
@@ -104,6 +110,11 @@ namespace mtbl{
 				this->command = "mutate";
 				this->mutate_chain = args::get( mutate_chain );
 				this->mutate_version = args::get( mutate_version );
+			}
+
+			if( test_command ){
+				this->command = "test";
+				this->test_name = args::get( test_name );
 			}
 
 
@@ -170,13 +181,23 @@ namespace mtbl{
 
 			if( this->tail_source == "mongo" ){
 
+				if( this->tail_database.size() == 0 ){
+					cerr << "Tail database must be set." << endl;
+					return false;
+				}
+
+				if( this->tail_collection.size() == 0 ){
+					cerr << "Tail collection must be set." << endl;
+					return false;
+				}
+
 				MongoClient mongo_client( this->mongo_connection );
 				cppkafka::Configuration kafka_config = {
 					{ "metadata.broker.list", this->broker_list }
 				};
 				cppkafka::Producer kafka_producer( kafka_config );
 
-				MongoTailer tailer( mongo_client, kafka_producer );
+				MongoTailer tailer( mongo_client, kafka_producer, this->tail_database, this->tail_collection );
 
 				tailer.tail();
 
@@ -188,6 +209,25 @@ namespace mtbl{
 			}
 
 		}
+
+
+
+		if( this->command == "test" ){
+
+			if( this->test_name == "mongo_insert" ){
+
+				MongoClient mongo_client( this->mongo_connection );
+				mongo_client.test();
+
+			}else{
+
+				cerr << "Unknown test name. Supported sources \'mongo_insert'." << endl;
+				return false;
+
+			}
+
+		}
+
 
 
 
