@@ -74,10 +74,14 @@ set( MUTABLE_LIBRARY_SOURCES
     src/clients/MongoClient.cc
     src/clients/MysqlClient.cc
 
+    src/consumers/ControlConsumer.cc
+    src/consumers/MutatorConsumer.cc
+    src/consumers/WalkerConsumer.cc
+
+    src/tailers/MongoTailer.cc
+
     src/utils/File.cc
     src/utils/Json.cc
-
-    src/mutators/Mutator.cc
 
     src/chains/Chain.cc
 

@@ -22,6 +22,9 @@ using ::mtbl::client::MongoClient;
 #include "clients/MysqlClient.h"
 using ::mtbl::client::MysqlClient;
 
+#include "tailers/MongoTailer.h"
+using mtbl::tailer::MongoTailer;
+
 #include "chains/mutable/MutableChain.h"
 using mtbl::chains::mtbl::MutableChain;
 
@@ -160,6 +163,32 @@ namespace mtbl{
 			this->publishKafkaMessage( "mutable_control", walk_command );
 
 		}
+
+
+
+		if( this->command == "tail" ){
+
+			if( this->tail_source == "mongo" ){
+
+				MongoClient mongo_client( this->mongo_connection );
+				cppkafka::Configuration kafka_config = {
+					{ "metadata.broker.list", this->broker_list }
+				};
+				cppkafka::Producer kafka_producer( kafka_config );
+
+				MongoTailer tailer( mongo_client, kafka_producer );
+
+				tailer.tail();
+
+			}else{
+
+				cerr << "Unknown tail source. Supported sources \'mongo'." << endl;
+				return false;
+
+			}
+
+		}
+
 
 
 
