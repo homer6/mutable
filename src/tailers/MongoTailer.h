@@ -15,14 +15,15 @@ namespace tailer{
 	class MongoTailer{
 
 		public:
-			MongoTailer( MongoClient& mongo_client, cppkafka::Producer& kafka_producer, const string& database_name );
+			MongoTailer( const string& mongo_connection_string, const string& kafka_brokers_list, const string& database_name );
 
-			void tail();
+			void tailDatabase();
+			void tailCollection( const string collection_name );
 
 
 		protected:
-			MongoClient& mongo_client;
-			cppkafka::Producer& kafka_producer;
+			const string mongo_connection_string;
+			const string kafka_brokers_list;
 			const string database_name;
 
 	};

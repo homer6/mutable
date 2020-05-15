@@ -187,15 +187,8 @@ namespace mtbl{
 					return false;
 				}
 
-				MongoClient mongo_client( this->mongo_connection );
-				cppkafka::Configuration kafka_config = {
-					{ "metadata.broker.list", this->broker_list }
-				};
-				cppkafka::Producer kafka_producer( kafka_config );
-
-				MongoTailer tailer( mongo_client, kafka_producer, this->tail_database );
-
-				tailer.tail();
+				MongoTailer tailer( this->mongo_connection, this->broker_list, this->tail_database );
+				tailer.tailDatabase();
 
 			}else{
 
