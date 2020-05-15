@@ -82,10 +82,12 @@ docker login
 
 docker tag mutable_base:latest homer6/mutable_base:v2
 docker tag mutable_build:latest homer6/mutable_build:v2
+docker tag mutable:latest homer6/mutable:v0.1.0
 docker tag mutable:latest homer6/mutable:latest
 
 docker push homer6/mutable_base:v2
 docker push homer6/mutable_build:v2
+docker push homer6/mutable:v0.1.0
 docker push homer6/mutable:latest
 ```
 
@@ -96,6 +98,10 @@ Connecting to Buildtime Docker Container
 
 ```
 docker run -it mutable_build
+git remote add upstream https://github.com/homer6/mutable.git
+git pull upstream master
+make -j4
+ldd build/mutable
 ```
 
 
@@ -103,7 +109,7 @@ Connecting to Runtime Docker Container
 --------------------------------------
 
 ```
-docker run -it mutable /bin/ash
+docker run -it --entrypoint /bin/ash mutable
 ```
 
 

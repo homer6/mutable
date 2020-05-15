@@ -20,7 +20,7 @@ namespace mtbl{
 namespace client{
 
 	MongoClient::MongoClient( const string connection_string )
-		:mongo_connection( mongocxx::uri{connection_string} )
+		:mongo_connection( mongocxx::uri{connection_string}, MongoClientOptions() )
 	{
 
 		this->client_session = std::make_unique<mongocxx::client_session>( this->mongo_connection.start_session() );

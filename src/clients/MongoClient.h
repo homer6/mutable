@@ -39,6 +39,19 @@ namespace client{
 
 	*/
 
+	class MongoClientOptions : public mongocxx::options::client {
+
+		public: 
+			MongoClientOptions( mongocxx::options::ssl ssl_opts = {}, mongocxx::options::apm apm_opts = {} ){
+				ssl_opts.ca_dir("/etc/ssl/certs");
+				ssl_opts.ca_file("/etc/ssl/certs/ca-certificates.crt");
+				this->ssl_opts( ssl_opts );
+				this->apm_opts( apm_opts );
+			};
+
+	};
+
+
 	class MongoClient{
 
 		public:
