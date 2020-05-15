@@ -3,6 +3,9 @@
 #include <string>
 using std::string;
 
+#include <vector>
+using std::vector;
+
 #include <memory>
 using std::unique_ptr;
 
@@ -42,7 +45,9 @@ namespace client{
 			MongoClient( const string connection_string );
 
 			void test();
-			void listDatabases();
+			vector<string> getDatabases();
+			vector<string> getCollections( const string& database_name );
+
 
 			mongocxx::client mongo_connection;
 			unique_ptr<mongocxx::client_session> client_session;
