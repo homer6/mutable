@@ -73,6 +73,7 @@ set( MUTABLE_LIBRARY_SOURCES
     src/clients/PostgresClient.cc
     src/clients/MongoClient.cc
     src/clients/MysqlClient.cc
+    src/clients/ElasticSearchClient.cc
 
     src/consumers/ControlConsumer.cc
     src/consumers/MutatorConsumer.cc
@@ -82,6 +83,7 @@ set( MUTABLE_LIBRARY_SOURCES
 
     src/utils/File.cc
     src/utils/Json.cc
+    src/utils/Common.cc
 
     src/chains/Chain.cc
 
