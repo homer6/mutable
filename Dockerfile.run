@@ -36,6 +36,8 @@ COPY --from=0 \
     /usr/local/lib/librdkafka.so.1 \
     /usr/lib/x86_64-linux-gnu/libzstd.so.1 \
     /usr/lib/x86_64-linux-gnu/liblz4.so.1 \
+    /usr/local/lib/libhiredis.so.0.14 \
+    /usr/local/lib/libredis++.so \
 	/lib/
 
 COPY build/mutable .

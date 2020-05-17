@@ -29,8 +29,9 @@ void worker_thread( int worker_id, MongoTailer &mongo_tailer, const string colle
 #include "json.hpp"
 using json = nlohmann::json;
 
-namespace mtbl{
-namespace tailer{
+
+namespace mtbl::tailer{
+
 
 	MongoTailer::MongoTailer( const string& mongo_connection_string, const string& kafka_brokers_list, const string& database_name )
 		:mongo_connection_string(mongo_connection_string), kafka_brokers_list(kafka_brokers_list), database_name(database_name)
@@ -139,6 +140,4 @@ namespace tailer{
 
 
 
-
-}
 }

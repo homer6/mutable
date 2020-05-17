@@ -6,8 +6,8 @@ using std::string;
 #include "mysql+++/mysql+++.h"
 
 
-namespace mtbl{
-namespace client{
+namespace mtbl::client{
+
 
 	class MysqlClient{
 
@@ -25,7 +25,4 @@ namespace client{
 	};
 
 
-
-
-}
 }

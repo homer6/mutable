@@ -16,8 +16,8 @@ using std::endl;
 using json = nlohmann::json;
 
 
-namespace mtbl{
-namespace client{
+namespace mtbl::client{
+
 
 	MongoClient::MongoClient( const string connection_string )
 		:mongo_connection( mongocxx::uri{connection_string}, MongoClientOptions() )
@@ -75,5 +75,5 @@ namespace client{
 	}
 
 
-}
+
 }

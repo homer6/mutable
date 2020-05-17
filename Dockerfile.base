@@ -54,6 +54,23 @@ RUN cd lib/cppkafka && \
     ldconfig && \
     cd ../..
 
+RUN cd lib/hiredis && \
+    git checkout v0.14.1 && \
+    make -j4 && \
+    make install && \
+    cd ../..
+
+RUN cd lib/redis-plus-plus && \
+    git checkout f7b0ce9588e9c8a9fdb0ae97a663d9b5e9b13f85 && \
+    rm -rf compile && \
+    mkdir -p compile && \
+    cd compile && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DREDIS_PLUS_PLUS_BUILD_TEST=OFF .. && \
+    make -j4 && \
+    make install && \
+    ldconfig && \
+    cd ../../..
+
 RUN rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake
 
 RUN ldconfig && cmake . && make -j4

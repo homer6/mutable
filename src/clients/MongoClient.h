@@ -14,8 +14,8 @@ using std::unique_ptr;
 
 
 
-namespace mtbl{
-namespace client{
+namespace mtbl::client{
+
 
 	/*
 	Warning: mongocxx::instance mongo_instance{}; must be created exactly once, in your program, before this class can be used.	
@@ -70,5 +70,4 @@ namespace client{
 
 
 
-}
 }

@@ -6,9 +6,7 @@ using std::string;
 #include <pqxx/pqxx>
 
 
-namespace mtbl{
-namespace client{
-
+namespace mtbl::client{
 
 
 	class PostgresClient{
@@ -21,7 +19,4 @@ namespace client{
 	};
 
 
-
-
-}
 }

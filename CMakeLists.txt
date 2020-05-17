@@ -15,6 +15,16 @@ endif(CCACHE_FOUND)
 FIND_LIBRARY(RDKAFKA rdkafka /usr/local/lib NO_DEFAULT_PATH)
 FIND_LIBRARY(CPPKAFKA cppkafka /usr/local/lib NO_DEFAULT_PATH)
 
+
+find_path(HIREDIS_HEADER hiredis)
+find_library(HIREDIS_LIB hiredis)
+
+find_path(REDIS_PLUS_PLUS_HEADER sw)
+find_library(REDIS_PLUS_PLUS_LIB redis++)
+
+
+
+
 link_libraries(${RDKAFKA} ${CPPKAFKA})
 
 
@@ -33,6 +43,8 @@ if( OPENSSL_FOUND )
         /usr/local/include/bsoncxx/v_noabi
 	    ${OPENSSL_INCLUDE_DIRS}
         lib/mysql-modern-cpp
+        ${HIREDIS_HEADER}
+        ${REDIS_PLUS_PLUS_HEADER}
 	)
 	link_directories( ${OPENSSL_LIBRARY_DIRS} ) 
 else()
@@ -64,6 +76,9 @@ set( MUTABLE_LIBS
     pthread
     dl
     z
+
+    redis++ 
+    hiredis
 )
 
 set( MUTABLE_LIBRARY_SOURCES
@@ -74,6 +89,7 @@ set( MUTABLE_LIBRARY_SOURCES
     src/clients/MongoClient.cc
     src/clients/MysqlClient.cc
     src/clients/ElasticSearchClient.cc
+    src/clients/RedisClient.cc
 
     src/consumers/ControlConsumer.cc
     src/consumers/MutatorConsumer.cc

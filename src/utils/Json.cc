@@ -5,8 +5,7 @@
 using std::map;
 
 
-namespace mtbl{
-namespace utils{
+namespace mtbl::utils{
 
 
 	json file_get_json( const string& filename ){
@@ -60,5 +59,4 @@ namespace utils{
 	}
 
 
-}
 }

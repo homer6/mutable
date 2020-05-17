@@ -7,8 +7,8 @@ using std::string;
 #include "json.hpp"
 using json = nlohmann::json;
 
-namespace mtbl{
-namespace utils{
+namespace mtbl::utils{
+
 
 	string file_get_contents( const string& filename );
 	bool file_remove( const string& filename );
@@ -71,6 +71,5 @@ namespace utils{
 
 
 
-}
 }
 

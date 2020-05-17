@@ -16,9 +16,7 @@ using std::vector;
 using json = nlohmann::json;
 
 
-namespace mtbl{
-namespace client{
-
+namespace mtbl::client{
 
 
 	class ElasticSearchClient{
@@ -52,7 +50,4 @@ namespace client{
 	};
 
 
-
-
-}
 }

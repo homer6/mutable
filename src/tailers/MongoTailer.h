@@ -9,8 +9,8 @@ using ::mtbl::client::MongoClient;
 #include <cppkafka/cppkafka.h>
 
 
-namespace mtbl{
-namespace tailer{
+namespace mtbl::tailer{
+
 
 	class MongoTailer{
 
@@ -30,6 +30,4 @@ namespace tailer{
 
 
 
-
-}
 }

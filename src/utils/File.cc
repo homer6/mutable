@@ -10,8 +10,8 @@ using std::endl;
 #include <sys/stat.h>
 
 
-namespace mtbl{
-namespace utils{
+namespace mtbl::utils{
+
 
 	string file_get_contents( const string& filename ){
 
@@ -105,6 +105,5 @@ namespace utils{
 	}
 
 
-}
 }
 

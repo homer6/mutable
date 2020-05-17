@@ -147,6 +147,13 @@ export MYSQL_DATABASE=temp
 
 export BROKER_LIST="127.0.0.1:9092"
 
+export ELASTICSEARCH_HOSTNAME="127.0.0.1"
+export ELASTICSEARCH_USERNAME=""
+export ELASTICSEARCH_PASSWORD=""
+export ELASTICSEARCH_PORT="9200"
+
+export REDIS_CONNECTION="tcp://127.0.0.1:6379"
+
 export ENVIRONMENT_PREFIX="testing"
 
 docker run \
@@ -155,6 +162,11 @@ docker run \
     --env MYSQL_USERNAME \
     --env MYSQL_DATABASE \
     --env BROKER_LIST \
+    --env ELASTICSEARCH_HOSTNAME \
+    --env ELASTICSEARCH_USERNAME \
+    --env ELASTICSEARCH_PASSWORD \
+    --env ELASTICSEARCH_PORT \
+    --env REDIS_CONNECTION \
     --env ENVIRONMENT_PREFIX \
     homer6/mutable
 ```
