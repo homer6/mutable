@@ -22,6 +22,9 @@ using ::mtbl::client::MongoClient;
 #include "clients/MysqlClient.h"
 using ::mtbl::client::MysqlClient;
 
+#include "clients/ElasticSearchClient.h"
+using ::mtbl::client::ElasticSearchClient;
+
 #include "clients/RedisClient.h"
 using ::mtbl::client::RedisClient;
 
@@ -369,6 +372,43 @@ namespace mtbl{
 		producer.produce( cppkafka::MessageBuilder(topic).partition(-1).payload(message_contents) );
 		producer.flush();
 
+	}
+
+
+
+
+	auto Mutable::createPostgresClient() const{
+		return std::make_unique<PostgresClient>( this->postgres_connection );
+	}
+
+	auto Mutable::createMongoClient() const{
+		return std::make_unique<MongoClient>( this->mongo_connection );	
+	}
+
+	auto Mutable::createMysqlClient() const{
+		return std::make_unique<MysqlClient>( this->mysql_connection );
+	}
+
+	auto Mutable::createKafkaProducer() const{
+		return std::make_unique<cppkafka::Producer>(cppkafka::Configuration{
+			{ "metadata.broker.list", this->broker_list }
+		});
+	}
+
+	auto Mutable::createKafkaConsumer() const{
+		return std::make_unique<cppkafka::Consumer>(cppkafka::Configuration{
+			{ "metadata.broker.list", this->broker_list },
+			{ "group.id", this->consume_consumer_group },
+			{ "enable.auto.commit", false }
+		});
+	}
+
+	auto Mutable::createRedisClient() const{
+		return std::make_unique<RedisClient>( this->redis_connection );
+	}
+
+	auto Mutable::createElasticSearchClient() const{
+		return std::make_unique<ElasticSearchClient>( this->elasticsearch_connection );
 	}
 
 

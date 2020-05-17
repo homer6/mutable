@@ -12,6 +12,9 @@ using std::vector;
 #include "json.hpp"
 using json = nlohmann::json;
 
+#include <memory>
+using std::unique_ptr;
+
 
 namespace mtbl{
 
@@ -27,6 +30,14 @@ namespace mtbl{
 			bool run();
 
 			void publishKafkaMessage( const string topic, const json& message ) const;
+
+			auto createPostgresClient() const;
+			auto createMongoClient() const;
+			auto createMysqlClient() const;
+			auto createKafkaProducer() const;
+			auto createKafkaConsumer() const;
+			auto createRedisClient() const;
+			auto createElasticSearchClient() const;
 
 
 		protected:

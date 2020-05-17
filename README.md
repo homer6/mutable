@@ -94,15 +94,17 @@ docker tag mutable_base:latest homer6/mutable_base:v3
 docker tag mutable_base:latest homer6/mutable_base:latest
 docker tag mutable_build:latest homer6/mutable_build:v3
 docker tag mutable_build:latest homer6/mutable_build:latest
-docker tag mutable:latest homer6/mutable:v0.2.0
+docker tag mutable:latest homer6/mutable:v0.2.1
 docker tag mutable:latest homer6/mutable:latest
 
 docker push homer6/mutable_base:v3
 docker push homer6/mutable_base:latest
 docker push homer6/mutable_build:v3
 docker push homer6/mutable_build:latest
-docker push homer6/mutable:v0.2.0
+docker push homer6/mutable:v0.2.1
 docker push homer6/mutable:latest
+
+
 ```
 
 
