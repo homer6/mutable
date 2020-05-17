@@ -22,6 +22,9 @@ using ::mtbl::client::MongoClient;
 #include "clients/MysqlClient.h"
 using ::mtbl::client::MysqlClient;
 
+#include "clients/RedisClient.h"
+using ::mtbl::client::RedisClient;
+
 #include "tailers/MongoTailer.h"
 using mtbl::tailer::MongoTailer;
 
@@ -72,15 +75,11 @@ namespace mtbl{
 		this->environment_prefix = this->getEnvironmentVariable( "ENVIRONMENT_PREFIX" );
 
 		this->broker_list = this->getEnvironmentVariable( "BROKER_LIST", "127.0.0.1:9092" );
-		this->mongo_connection = this->getEnvironmentVariable( "MONGO_CONNECTION" );
-
-		this->mysql_host = this->getEnvironmentVariable( "MYSQL_HOST" );
-		this->mysql_port = this->getEnvironmentVariable( "MYSQL_PORT" );
-		this->mysql_username = this->getEnvironmentVariable( "MYSQL_USERNAME" );
-		this->mysql_password = this->getEnvironmentVariable( "MYSQL_PASSWORD" );
-		this->mysql_database = this->getEnvironmentVariable( "MYSQL_DATABASE" );
-
-		this->postgres_connection = this->getEnvironmentVariable( "POSTGRES_CONNECTION" );
+		this->mongo_connection = this->getEnvironmentVariable( "MONGO_CONNECTION", "mongodb://localhost/" );
+		this->mysql_connection = this->getEnvironmentVariable( "MYSQL_CONNECTION", "mysql://localhost" );
+		this->postgres_connection = this->getEnvironmentVariable( "POSTGRES_CONNECTION", "postgresql://localhost" );
+		this->elasticsearch_connection = this->getEnvironmentVariable( "ELASTICSEARCH_CONNECTION", "https://localhost:9200" );
+		this->redis_connection = this->getEnvironmentVariable( "REDIS_CONNECTION", "tcp://127.0.0.1:6379" );
 
 
 		try{
@@ -237,10 +236,20 @@ namespace mtbl{
 
 				}
 
+			}else if( this->test_name == "redis_set_get" ){
+
+				RedisClient redis_client( this->redis_connection );
+
+				redis_client.set( "test6284539", "342356972347" );
+				cout << redis_client.get( "test6284539" ) << endl;
 
 			}else{
 
-				cerr << "Unknown test name. Supported tests: mongo_insert, mongo_list_databases, mongo_list_collections, mongo_list_all_collections." << endl;
+				cerr << "Unknown test name. Supported tests: " << endl
+					 << "   mongo_insert, mongo_list_databases, mongo_list_collections, mongo_list_all_collections" << endl
+					 << "   redis_set_get" << endl
+					 << endl;
+
 				return false;
 
 			}

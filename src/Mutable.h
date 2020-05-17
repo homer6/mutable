@@ -36,12 +36,10 @@ namespace mtbl{
 
 			string broker_list;
 			string mongo_connection;
-			string mysql_host;
-			string mysql_port;
-			string mysql_username;
-			string mysql_password;
-			string mysql_database;
+			string mysql_connection;			
 			string postgres_connection;
+			string elasticsearch_connection;
+			string redis_connection;
 
 			string command;
 

@@ -50,9 +50,17 @@ make install
 ldconfig
 cd ../..
 
-cd lib/cppkafka
-git checkout 006642cdb2a871ef3aad517e9148607b859604e0
-cmake .
+cd lib/hiredis
+git checkout v0.14.1
+make -j12
+make install
+ldconfig
+cd ../..
+
+cd lib/redis-plus-plus
+git checkout f7b0ce9588e9c8a9fdb0ae97a663d9b5e9b13f85
+git clean -fd
+cmake -DREDIS_PLUS_PLUS_CXX_STANDARD=17 .
 make -j12
 make install
 ldconfig
@@ -147,32 +155,28 @@ Running (Docker)
 ```
 export POSTGRES_CONNECTION="postgresql://username@localhost/dbname?connect_timeout=10&application_name=myapp&ssl=true"
 export MONGO_CONNECTION="mongodb://localhost/"
-
-export MYSQL_USERNAME=root
-export MYSQL_DATABASE=temp
-
+export MYSQL_CONNECTION="mysql://localhost/"
 export BROKER_LIST="127.0.0.1:9092"
-
-export ELASTICSEARCH_HOSTNAME="127.0.0.1"
-export ELASTICSEARCH_USERNAME=""
-export ELASTICSEARCH_PASSWORD=""
-export ELASTICSEARCH_PORT="9200"
-
+export ELASTICSEARCH_CONNECTION="https://localhost:9200"
 export REDIS_CONNECTION="tcp://127.0.0.1:6379"
-
 export ENVIRONMENT_PREFIX="testing"
 
 docker run \
     --env POSTGRES_CONNECTION \
     --env MONGO_CONNECTION \
-    --env MYSQL_USERNAME \
-    --env MYSQL_DATABASE \
+    --env MYSQL_CONNECTION \
     --env BROKER_LIST \
-    --env ELASTICSEARCH_HOSTNAME \
-    --env ELASTICSEARCH_USERNAME \
-    --env ELASTICSEARCH_PASSWORD \
-    --env ELASTICSEARCH_PORT \
+    --env ELASTICSEARCH_CONNECTION \
     --env REDIS_CONNECTION \
     --env ENVIRONMENT_PREFIX \
     homer6/mutable
+```
+
+
+Testing (Docker)
+----------------
+
+```
+export MONGO_CONNECTION="mongodb://localhost/"
+docker run --env MONGO_CONNECTION homer6/mutable test mongo_list_all_collections
 ```

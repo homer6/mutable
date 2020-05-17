@@ -17,7 +17,7 @@ using std::map;
 using ::mtbl::tailer::MongoTailer;
 
 
-void worker_thread( int worker_id, MongoTailer &mongo_tailer, const string collection_name ){
+void worker_thread( int, MongoTailer &mongo_tailer, const string collection_name ){
 
 	mongo_tailer.tailCollection( collection_name );
 
@@ -94,7 +94,7 @@ namespace mtbl::tailer{
 
 	void MongoTailer::tailCollection( const string collection_name ){
 
-		int x = 0;
+		//int x = 0;
 		
 
 		using change_stream_options = mongocxx::options::change_stream;

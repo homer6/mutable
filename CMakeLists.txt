@@ -15,17 +15,14 @@ endif(CCACHE_FOUND)
 FIND_LIBRARY(RDKAFKA rdkafka /usr/local/lib NO_DEFAULT_PATH)
 FIND_LIBRARY(CPPKAFKA cppkafka /usr/local/lib NO_DEFAULT_PATH)
 
+link_libraries( ${RDKAFKA} ${CPPKAFKA} )
+
 
 find_path(HIREDIS_HEADER hiredis)
 find_library(HIREDIS_LIB hiredis)
 
 find_path(REDIS_PLUS_PLUS_HEADER sw)
 find_library(REDIS_PLUS_PLUS_LIB redis++)
-
-
-
-
-link_libraries(${RDKAFKA} ${CPPKAFKA})
 
 
 set( MUTABLE_COMPILE_OPTIONS
@@ -66,19 +63,19 @@ set( MUTABLE_LIBS
     bsoncxx
     sasl2
     ssl
-    pthread
+    
 
     mysqlclient
     mysqlcppconn
 
     rdkafka
     cppkafka
-    pthread
     dl
     z
 
-    redis++ 
     hiredis
+    redis++
+    pthread  
 )
 
 set( MUTABLE_LIBRARY_SOURCES
@@ -112,7 +109,7 @@ set_target_properties( mutable_static
     PROPERTIES
     COMPILE_OPTIONS          "${MUTABLE_COMPILE_OPTIONS}"
 )
-target_link_libraries( mutable_static ${MUTABLE_LIBS} )
+target_link_libraries( mutable_static ${MUTABLE_LIBS} ${HIREDIS_LIB} ${REDIS_PLUS_PLUS_LIB} )
 
 
 add_executable( mutable src/main.cc )
@@ -120,7 +117,7 @@ set_target_properties( mutable
     PROPERTIES
     COMPILE_OPTIONS          "${WORKER_COMPILE_OPTIONS}"
 )
-target_link_libraries( mutable mutable_static ${OPENSSL_LIBRARIES} )
+target_link_libraries( mutable mutable_static ${OPENSSL_LIBRARIES} ${HIREDIS_LIB} ${REDIS_PLUS_PLUS_LIB} )
 
 
 
