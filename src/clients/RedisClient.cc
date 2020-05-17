@@ -13,7 +13,7 @@ namespace mtbl::client{
 
 
 
-	void RedisClient::set( const string& key, const string& value ) const{
+	void RedisClient::set( const string& key, const string& value ){
 
 		this->redis_connection.set( key, value );
 
@@ -21,7 +21,7 @@ namespace mtbl::client{
 
 
 
-	string RedisClient::get( const string& key ) const{
+	string RedisClient::get( const string& key ){
 
 		string returned_value;
 
@@ -32,7 +32,6 @@ namespace mtbl::client{
 		}
 
 		return returned_value;
-
 
 	}
 

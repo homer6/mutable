@@ -72,6 +72,8 @@ apt install -y docker.io
 docker build -t mutable_base -f Dockerfile.base .
 docker build -t mutable_build -f Dockerfile.build .
 docker build -t mutable -f Dockerfile.run .
+
+
 ```
 
 Publishing to dockerhub (after building)
@@ -80,14 +82,18 @@ Publishing to dockerhub (after building)
 ```
 docker login
 
-docker tag mutable_base:latest homer6/mutable_base:v2
-docker tag mutable_build:latest homer6/mutable_build:v2
-docker tag mutable:latest homer6/mutable:v0.1.0
+docker tag mutable_base:latest homer6/mutable_base:v3
+docker tag mutable_base:latest homer6/mutable_base:latest
+docker tag mutable_build:latest homer6/mutable_build:v3
+docker tag mutable_build:latest homer6/mutable_build:latest
+docker tag mutable:latest homer6/mutable:v0.2.0
 docker tag mutable:latest homer6/mutable:latest
 
-docker push homer6/mutable_base:v2
-docker push homer6/mutable_build:v2
-docker push homer6/mutable:v0.1.0
+docker push homer6/mutable_base:v3
+docker push homer6/mutable_base:latest
+docker push homer6/mutable_build:v3
+docker push homer6/mutable_build:latest
+docker push homer6/mutable:v0.2.0
 docker push homer6/mutable:latest
 ```
 

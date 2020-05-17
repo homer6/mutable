@@ -14,8 +14,8 @@ namespace mtbl::client{
 		public:
 			RedisClient( const string connection_string );
 
-			void set( const string& key, const string& value ) const;
-			string get( const string& key ) const;
+			void set( const string& key, const string& value );
+			string get( const string& key );
 
 
 		protected:
