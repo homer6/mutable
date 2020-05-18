@@ -15,8 +15,14 @@ using json = nlohmann::json;
 #include <memory>
 using std::unique_ptr;
 
+#include "clients/KafkaProducer.h"
+using ::mtbl::client::KafkaProducer;
 
 namespace mtbl{
+
+	namespace client{
+		class KafkaProducer;
+	}
 
 	class Mutable{
 		
@@ -29,7 +35,7 @@ namespace mtbl{
 
 			bool run();
 
-			void publishKafkaMessage( const string topic, const json& message ) const;
+			void publishKafkaMessage( const string topic, const json& message );
 
 			auto createPostgresClient() const;
 			auto createMongoClient() const;
@@ -38,6 +44,8 @@ namespace mtbl{
 			auto createKafkaConsumer() const;
 			auto createRedisClient() const;
 			auto createElasticSearchClient() const;
+
+			void connectKafkaProducer();
 
 
 		protected:
@@ -70,6 +78,7 @@ namespace mtbl{
 			string test_name;
 			string test_database;
 
+			unique_ptr<client::KafkaProducer> main_producer;
 
 	};
 

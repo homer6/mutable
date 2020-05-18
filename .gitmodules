@@ -22,3 +22,6 @@
 [submodule "lib/redis-plus-plus"]
 	path = lib/redis-plus-plus
 	url = https://github.com/sewenew/redis-plus-plus.git
+[submodule "lib/homer6/url"]
+	path = lib/homer6/url
+	url = https://github.com/homer6/url.git

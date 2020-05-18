@@ -28,6 +28,12 @@ using ::mtbl::client::ElasticSearchClient;
 #include "clients/RedisClient.h"
 using ::mtbl::client::RedisClient;
 
+#include "clients/KafkaProducer.h"
+using ::mtbl::client::KafkaProducer;
+
+#include "clients/KafkaConsumer.h"
+using ::mtbl::client::KafkaConsumer;
+
 #include "tailers/MongoTailer.h"
 using mtbl::tailer::MongoTailer;
 
@@ -360,17 +366,12 @@ namespace mtbl{
 
 
 
-	void Mutable::publishKafkaMessage( const string topic, const json& message ) const{
+	void Mutable::publishKafkaMessage( const string topic, const json& message ){
 
-		cppkafka::Configuration config = {
-			{ "metadata.broker.list", this->broker_list }
-		};
-
-		cppkafka::Producer producer(config);
-
-		const string message_contents = message.dump();
-		producer.produce( cppkafka::MessageBuilder(topic).partition(-1).payload(message_contents) );
-		producer.flush();
+		this->connectKafkaProducer();
+		const string message_contents = message.dump();		
+		this->main_producer->producer.produce( cppkafka::MessageBuilder(topic).partition(-1).payload(message_contents) );
+		this->main_producer->producer.flush();
 
 	}
 
@@ -390,17 +391,11 @@ namespace mtbl{
 	}
 
 	auto Mutable::createKafkaProducer() const{
-		return std::make_unique<cppkafka::Producer>(cppkafka::Configuration{
-			{ "metadata.broker.list", this->broker_list }
-		});
+		return std::make_unique<KafkaProducer>( this->broker_list );
 	}
 
 	auto Mutable::createKafkaConsumer() const{
-		return std::make_unique<cppkafka::Consumer>(cppkafka::Configuration{
-			{ "metadata.broker.list", this->broker_list },
-			{ "group.id", this->consume_consumer_group },
-			{ "enable.auto.commit", false }
-		});
+		return std::make_unique<KafkaConsumer>( this->broker_list, this->consume_consumer_group );
 	}
 
 	auto Mutable::createRedisClient() const{
@@ -412,5 +407,11 @@ namespace mtbl{
 	}
 
 
+	void Mutable::connectKafkaProducer(){
+
+		if( !this->main_producer ){
+			this->main_producer.reset( new KafkaProducer(this->broker_list) );
+		}
+	}
 
 }

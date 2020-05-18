@@ -87,6 +87,8 @@ set( MUTABLE_LIBRARY_SOURCES
     src/clients/MysqlClient.cc
     src/clients/ElasticSearchClient.cc
     src/clients/RedisClient.cc
+    src/clients/KafkaProducer.cc
+    src/clients/KafkaConsumer.cc
 
     src/consumers/ControlConsumer.cc
     src/consumers/MutatorConsumer.cc
@@ -97,6 +99,7 @@ set( MUTABLE_LIBRARY_SOURCES
     src/utils/File.cc
     src/utils/Json.cc
     src/utils/Common.cc
+    src/utils/Url.cc
 
     src/chains/Chain.cc
 
@@ -115,7 +118,7 @@ target_link_libraries( mutable_static ${MUTABLE_LIBS} ${HIREDIS_LIB} ${REDIS_PLU
 add_executable( mutable src/main.cc )
 set_target_properties( mutable
     PROPERTIES
-    COMPILE_OPTIONS          "${WORKER_COMPILE_OPTIONS}"
+    COMPILE_OPTIONS          "${MUTABLE_COMPILE_OPTIONS}"
 )
 target_link_libraries( mutable mutable_static ${OPENSSL_LIBRARIES} ${HIREDIS_LIB} ${REDIS_PLUS_PLUS_LIB} )
 
