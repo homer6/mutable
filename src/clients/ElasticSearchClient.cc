@@ -12,22 +12,13 @@ using std::endl;
 
 namespace mtbl::client{
 
-	ElasticSearchClient::ElasticSearchClient( const string& connection_string, const string& username, const string& password, bool secure, int port )
-		:connection_string(connection_string), username(username), password(password), secure(secure), port(port)
+	ElasticSearchClient::ElasticSearchClient( Config config )
+		:hostname(config.url.getHost()), username(config.url.getUsername()), password(config.url.getPassword()), secure(config.url.isSecure()), port(config.url.getPort())
 	{
 
-		using namespace mtbl::utils::common;
-
-		// connect to elasticsearch
-			vector<string> hostname_parts = mtbl::utils::common::split_string( this->connection_string, ':' );
-			if( hostname_parts.size() == 2 ){
-				this->hostname = hostname_parts[0];
-				this->port = std::stoi( hostname_parts[1] );
-			}else if( hostname_parts.size() == 1 ){
-				this->hostname = hostname_parts[0];
-			}else{
-				throw std::runtime_error( "Unexpected elasticsearch target hostname: " + this->connection_string );
-			}
+		if( this->port == 0 ){
+			this->port = 9200;
+		}
 
 		if( this->secure ){
 			this->http_client.reset( new httplib::SSLClient( this->hostname.c_str(), this->port ) );

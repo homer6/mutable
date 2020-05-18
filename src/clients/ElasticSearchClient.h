@@ -16,13 +16,27 @@ using std::vector;
 using json = nlohmann::json;
 
 
+#include "utils/Url.h"
+using homer6::Url;
+
+
 namespace mtbl::client{
 
 
 	class ElasticSearchClient{
 
 		public:
-			ElasticSearchClient( const string& connection_string, const string& username = "", const string& password = "", bool secure = true, int port = 9200 );
+
+			struct Config{
+				Config( const string& connection_string )
+					:url(connection_string)
+				{
+				}
+
+				homer6::Url url;
+			};
+
+			ElasticSearchClient( Config config );
 
 			bool sendRecords( const string& index_name, const vector<json>& records ) const;
 			bool createIndex( const string& index_name, const json& index_definition ) const;
@@ -36,14 +50,12 @@ namespace mtbl::client{
 			httplib::Headers getRequestHeaders() const;
 			bool handleResponse( std::shared_ptr<httplib::Response> es_response ) const;
 
-
-			string connection_string;
+			string hostname;
 			string username;
 			string password;			
 			bool secure = true;
 			int port = 9200;
-
-			string hostname;
+			
 			std::unique_ptr<httplib::Client> http_client;
 			
 

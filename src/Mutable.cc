@@ -13,26 +13,6 @@ using std::endl;
 
 extern char **environ;
 
-#include "clients/PostgresClient.h"
-using ::mtbl::client::PostgresClient;
-
-#include "clients/MongoClient.h"
-using ::mtbl::client::MongoClient;
-
-#include "clients/MysqlClient.h"
-using ::mtbl::client::MysqlClient;
-
-#include "clients/ElasticSearchClient.h"
-using ::mtbl::client::ElasticSearchClient;
-
-#include "clients/RedisClient.h"
-using ::mtbl::client::RedisClient;
-
-#include "clients/KafkaProducer.h"
-using ::mtbl::client::KafkaProducer;
-
-#include "clients/KafkaConsumer.h"
-using ::mtbl::client::KafkaConsumer;
 
 #include "tailers/MongoTailer.h"
 using mtbl::tailer::MongoTailer;
@@ -213,31 +193,30 @@ namespace mtbl{
 
 			if( this->test_name == "mongo_insert" ){
 
-				MongoClient mongo_client( this->mongo_connection );
-				mongo_client.test();
+				this->createMongoClient()->test();
+				
 
 			}else if( this->test_name == "mongo_list_databases" ){
 
-				MongoClient mongo_client( this->mongo_connection );
-				mongo_client.getDatabases();
+				this->createMongoClient()->getDatabases();
 
 			}else if( this->test_name == "mongo_list_collections" ){
 
-				MongoClient mongo_client( this->mongo_connection );
-				for( auto& collection_name : mongo_client.getCollections(this->test_database) ){
+				auto mongo_client = this->createMongoClient();
+				for( auto& collection_name : mongo_client->getCollections(this->test_database) ){
 					cout << collection_name << endl;
 				}
 
 			}else if( this->test_name == "mongo_list_all_collections" ){
 
-				MongoClient mongo_client( this->mongo_connection );
+				auto mongo_client = this->createMongoClient();
 
-				vector<string> databases = mongo_client.getDatabases();
+				vector<string> databases = mongo_client->getDatabases();
 
 				for( auto& database_name : databases ){
 					cout << database_name << endl;
 
-					for( auto& collection_name : mongo_client.getCollections(database_name) ){
+					for( auto& collection_name : mongo_client->getCollections(database_name) ){
 						cout << "    " << collection_name << endl;
 					}
 
@@ -247,10 +226,10 @@ namespace mtbl{
 
 			}else if( this->test_name == "redis_set_get" ){
 
-				RedisClient redis_client( this->redis_connection );
+				auto redis_client = this->createRedisClient();
 
-				redis_client.set( "test6284539", "342356972347" );
-				cout << redis_client.get( "test6284539" ) << endl;
+				redis_client->set( "test6284539", "342356972347" );
+				cout << redis_client->get( "test6284539" ) << endl;
 
 			}else{
 
@@ -378,31 +357,31 @@ namespace mtbl{
 
 
 
-	auto Mutable::createPostgresClient() const{
+	unique_ptr<PostgresClient> Mutable::createPostgresClient() const{
 		return std::make_unique<PostgresClient>( this->postgres_connection );
 	}
 
-	auto Mutable::createMongoClient() const{
+	unique_ptr<MongoClient> Mutable::createMongoClient() const{
 		return std::make_unique<MongoClient>( this->mongo_connection );	
 	}
 
-	auto Mutable::createMysqlClient() const{
+	unique_ptr<MysqlClient> Mutable::createMysqlClient() const{
 		return std::make_unique<MysqlClient>( this->mysql_connection );
 	}
 
-	auto Mutable::createKafkaProducer() const{
+	unique_ptr<KafkaProducer> Mutable::createKafkaProducer() const{
 		return std::make_unique<KafkaProducer>( this->broker_list );
 	}
 
-	auto Mutable::createKafkaConsumer() const{
+	unique_ptr<KafkaConsumer> Mutable::createKafkaConsumer() const{
 		return std::make_unique<KafkaConsumer>( this->broker_list, this->consume_consumer_group );
 	}
 
-	auto Mutable::createRedisClient() const{
+	unique_ptr<RedisClient> Mutable::createRedisClient() const{
 		return std::make_unique<RedisClient>( this->redis_connection );
 	}
 
-	auto Mutable::createElasticSearchClient() const{
+	unique_ptr<ElasticSearchClient> Mutable::createElasticSearchClient() const{
 		return std::make_unique<ElasticSearchClient>( this->elasticsearch_connection );
 	}
 

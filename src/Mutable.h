@@ -15,13 +15,38 @@ using json = nlohmann::json;
 #include <memory>
 using std::unique_ptr;
 
+#include "clients/PostgresClient.h"
+using ::mtbl::client::PostgresClient;
+
+#include "clients/MongoClient.h"
+using ::mtbl::client::MongoClient;
+
+#include "clients/MysqlClient.h"
+using ::mtbl::client::MysqlClient;
+
+#include "clients/ElasticSearchClient.h"
+using ::mtbl::client::ElasticSearchClient;
+
+#include "clients/RedisClient.h"
+using ::mtbl::client::RedisClient;
+
 #include "clients/KafkaProducer.h"
 using ::mtbl::client::KafkaProducer;
+
+#include "clients/KafkaConsumer.h"
+using ::mtbl::client::KafkaConsumer;
+
 
 namespace mtbl{
 
 	namespace client{
+		class PostgresClient;
+		class MongoClient;
+		class MysqlClient;
 		class KafkaProducer;
+		class KafkaConsumer;
+		class RedisClient;
+		class ElasticSearchClient;
 	}
 
 	class Mutable{
@@ -37,13 +62,13 @@ namespace mtbl{
 
 			void publishKafkaMessage( const string topic, const json& message );
 
-			auto createPostgresClient() const;
-			auto createMongoClient() const;
-			auto createMysqlClient() const;
-			auto createKafkaProducer() const;
-			auto createKafkaConsumer() const;
-			auto createRedisClient() const;
-			auto createElasticSearchClient() const;
+			unique_ptr<PostgresClient> createPostgresClient() const;
+			unique_ptr<MongoClient> createMongoClient() const;
+			unique_ptr<MysqlClient> createMysqlClient() const;
+			unique_ptr<KafkaProducer> createKafkaProducer() const;
+			unique_ptr<KafkaConsumer> createKafkaConsumer() const;
+			unique_ptr<RedisClient> createRedisClient() const;
+			unique_ptr<ElasticSearchClient> createElasticSearchClient() const;
 
 			void connectKafkaProducer();
 
