@@ -123,13 +123,6 @@ namespace mtbl{
 
 	bool Mutable::run(){
 
-		
-		json running_dialogue{
-			{ "hey", "there" },
-			{ "how", "are" },
-			{ "you", "!" }
-		};
-
 
 		if( this->command == "mutate" ){
 
@@ -198,7 +191,11 @@ namespace mtbl{
 
 			}else if( this->test_name == "mongo_list_databases" ){
 
-				this->createMongoClient()->getDatabases();
+				auto databases = this->createMongoClient()->getDatabases();
+				for( auto& database : databases ){
+					cout << database << endl;
+				}
+
 
 			}else if( this->test_name == "mongo_list_collections" ){
 
@@ -206,6 +203,7 @@ namespace mtbl{
 				for( auto& collection_name : mongo_client->getCollections(this->test_database) ){
 					cout << collection_name << endl;
 				}
+
 
 			}else if( this->test_name == "mongo_list_all_collections" ){
 
@@ -224,6 +222,7 @@ namespace mtbl{
 
 				}
 
+
 			}else if( this->test_name == "redis_set_get" ){
 
 				auto redis_client = this->createRedisClient();
@@ -231,11 +230,27 @@ namespace mtbl{
 				redis_client->set( "test6284539", "342356972347" );
 				cout << redis_client->get( "test6284539" ) << endl;
 
+
+
+			}else if( this->test_name == "mysql_create_table" ){
+
+				auto mysql_client = this->createMysqlClient();
+				mysql_client->executeStatement( R"MTBL_STATEMENT(
+					CREATE TABLE pet (
+						name VARCHAR(20), 
+						owner VARCHAR(20), 
+						species VARCHAR(20), 
+						gender CHAR(1)
+					);
+				)MTBL_STATEMENT" );
+
+
 			}else{
 
 				cerr << "Unknown test name. Supported tests: " << endl
 					 << "   mongo_insert, mongo_list_databases, mongo_list_collections, mongo_list_all_collections" << endl
 					 << "   redis_set_get" << endl
+					 << "   mysql_create_table" << endl
 					 << endl;
 
 				return false;
@@ -249,38 +264,6 @@ namespace mtbl{
 
 
 		/*
-
-
-		MongoClient mongo_client( this->mongo_connection );
-
-		mongo_client.test();
-		mongo_client.listDatabases();
-
-		*/
-
-
-		/*
-		MysqlClient mysql_client( 
-			this->mysql_host
-			std::stol(this->mysql_port),
-			this->mysql_username,
-			this->mysql_password,
-			this->mysql_database
-		);
-
-		mysql_client.executeStatement( R"MTBL_STATEMENT(
-			CREATE TABLE pet (
-				name VARCHAR(20), 
-				owner VARCHAR(20), 
-				species VARCHAR(20), 
-				gender CHAR(1)
-			);
-		)MTBL_STATEMENT" );
-		*/
-
-
-
-		/*
 		PostgresClient postgres_client( postgres_connection );
 		
 
@@ -289,9 +272,7 @@ namespace mtbl{
 		mutable_chain.runMutations( 0, 1 );
 
 		*/
-		
-		//cout << running_dialogue.dump(4) << endl;
-		
+
 
 		return true;
 
@@ -348,8 +329,16 @@ namespace mtbl{
 	void Mutable::publishKafkaMessage( const string topic, const json& message ){
 
 		this->connectKafkaProducer();
-		const string message_contents = message.dump();		
-		this->main_producer->producer.produce( cppkafka::MessageBuilder(topic).partition(-1).payload(message_contents) );
+		const string message_contents = message.dump();
+
+		string namespaced_topic;
+		if( this->environment_prefix.empty() ){
+			namespaced_topic = topic;
+		}else{
+			namespaced_topic = this->environment_prefix + "_" + topic;
+		}
+
+		this->main_producer->producer.produce( cppkafka::MessageBuilder(namespaced_topic).partition(-1).payload(message_contents) );
 		this->main_producer->producer.flush();
 
 	}
