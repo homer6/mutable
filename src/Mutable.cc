@@ -211,7 +211,7 @@ namespace mtbl{
 			}else{
 				
 				cerr << "Unknown consumer type. Supported consumers: " << endl
-					 << "   mutator" << endl
+					 << "   echo" << endl
 					 << endl;
 				return false;
 
