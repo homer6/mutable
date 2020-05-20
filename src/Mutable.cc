@@ -20,6 +20,10 @@ using mtbl::tailer::MongoTailer;
 #include "chains/mutable/MutableChain.h"
 using mtbl::chains::mtbl::MutableChain;
 
+#include "consumers/EchoConsumer.h"
+using mtbl::consumers::EchoConsumer;
+
+
 #include <cppkafka/cppkafka.h>
 
 #include "args.hxx"
@@ -175,6 +179,42 @@ namespace mtbl{
 
 				cerr << "Unknown tail source. Supported sources \'mongo'." << endl;
 				return false;
+
+			}
+
+		}
+
+
+
+		if( this->command == "consume" ){
+
+			if( this->consume_topic.size() == 0 ){
+				cerr << "Consume topic must be set." << endl;
+				return false;
+			}
+
+			if( this->consume_consumer_group.size() == 0 ){
+				cerr << "Consume consumer group must be set." << endl;
+				return false;
+			}
+
+
+
+
+			if( this->consume_type == "echo" ){
+
+				auto kafka_consumer = this->createKafkaConsumer();
+
+				EchoConsumer echo_consumer{ std::move(kafka_consumer), this->consume_topic };
+				echo_consumer.consume();
+
+			}else{
+				
+				cerr << "Unknown consumer type. Supported consumers: " << endl
+					 << "   mutator" << endl
+					 << endl;
+				return false;
+
 
 			}
 

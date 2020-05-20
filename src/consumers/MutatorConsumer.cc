@@ -1,8 +1,7 @@
 #include "consumers/MutatorConsumer.h"
 
 
-namespace mtbl{
-namespace consumer{
+namespace mtbl::consumers{
 
 	MutatorConsumer::MutatorConsumer()
 	{
@@ -11,5 +10,4 @@ namespace consumer{
 
 	}
 
-}
 }

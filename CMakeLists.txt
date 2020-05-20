@@ -93,6 +93,7 @@ set( MUTABLE_LIBRARY_SOURCES
     src/consumers/ControlConsumer.cc
     src/consumers/MutatorConsumer.cc
     src/consumers/WalkerConsumer.cc
+    src/consumers/EchoConsumer.cc
 
     src/tailers/MongoTailer.cc
 

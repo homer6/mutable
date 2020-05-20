@@ -4,8 +4,7 @@
 using std::string;
 
 
-namespace mtbl{
-namespace consumer{
+namespace mtbl::consumers{
 
 
 
@@ -19,5 +18,4 @@ namespace consumer{
 
 
 
-}
 }

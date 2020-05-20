@@ -1,8 +1,6 @@
 #include "consumers/ControlConsumer.h"
 
-
-namespace mtbl{
-namespace consumer{
+namespace mtbl::consumers{
 
 	ControlConsumer::ControlConsumer()
 	{
@@ -11,5 +9,5 @@ namespace consumer{
 
 	}
 
-}
+
 }

@@ -1,8 +1,7 @@
 #include "consumers/WalkerConsumer.h"
 
 
-namespace mtbl{
-namespace consumer{
+namespace mtbl::consumers{
 
 	WalkerConsumer::WalkerConsumer()
 	{
@@ -17,5 +16,5 @@ for(auto doc : cursor) {
 
 	}
 
-}
+
 }
