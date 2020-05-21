@@ -181,4 +181,6 @@ Testing (Docker)
 ```
 export MONGO_CONNECTION="mongodb://localhost/"
 docker run --env MONGO_CONNECTION homer6/mutable test mongo_list_all_collections
+docker run --env MONGO_CONNECTION homer6/mutable test mongo_list_databases
+docker run --env MONGO_CONNECTION homer6/mutable tail mongo <db-name>
 ```

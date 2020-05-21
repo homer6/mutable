@@ -44,10 +44,10 @@ namespace mtbl{
 		args::Positional<string> tail_database( tail_command, "database", "the database name to tail" );
 
 		args::Command consume_command( commands, "consume", "consume from kafka" );
+		args::Positional<string> consume_type( consume_command, "type", "type of consumer" );
 		args::Positional<string> consume_topic( consume_command, "topic", "topic to consume from" );
 		args::Positional<string> consume_consumer_group( consume_command, "consumer_group", "kafka consumer group" );
-		args::Positional<string> consume_type( consume_command, "type", "type of consumer" );
-
+		
 		args::Command walk_command( commands, "walk", "instruct the walker to walk" );
 		args::Positional<string> walk_source( walk_command, "source", "type of database to walk" );
 		args::Positional<string> walk_object( walk_command, "object", "type of object (table, collection) to walk" );
@@ -87,9 +87,9 @@ namespace mtbl{
 
 			if( consume_command ){
 				this->command = "consume";
-				this->consume_topic = args::get( consume_topic );
-				this->consume_consumer_group = args::get( consume_consumer_group );
 				this->consume_type = args::get( consume_type );
+				this->consume_topic = args::get( consume_topic );
+				this->consume_consumer_group = args::get( consume_consumer_group );				
 			}
 
 			if( walk_command ){

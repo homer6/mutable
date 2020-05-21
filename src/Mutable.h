@@ -90,9 +90,9 @@ namespace mtbl{
 			string tail_source;
 			string tail_database;
 
-			string consume_topic;
-			string consume_consumer_group;
 			string consume_type;
+			string consume_topic;
+			string consume_consumer_group;			
 
 			string walk_source;
 			string walk_object;
