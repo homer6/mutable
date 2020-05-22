@@ -32,18 +32,20 @@ set( MUTABLE_COMPILE_OPTIONS
     -std=c++17
 )
 
+# add_definitions( -D_GLIBCXX_USE_CXX11_ABI=1 )
+
 
 if( OPENSSL_FOUND )
-	include_directories(        
-	    src
+    include_directories(        
+        src
         /usr/local/include/mongocxx/v_noabi
         /usr/local/include/bsoncxx/v_noabi
-	    ${OPENSSL_INCLUDE_DIRS}
+        ${OPENSSL_INCLUDE_DIRS}
         lib/mysql-modern-cpp
         ${HIREDIS_HEADER}
         ${REDIS_PLUS_PLUS_HEADER}
-	)
-	link_directories( ${OPENSSL_LIBRARY_DIRS} ) 
+    )
+    link_directories( ${OPENSSL_LIBRARY_DIRS} ) 
 else()
     # Error; with REQUIRED, pkg_search_module() will throw an error by it's own
 endif()
@@ -111,20 +113,11 @@ set( MUTABLE_LIBRARY_SOURCES
 
 )
 
-add_library( mutable_static STATIC ${MUTABLE_LIBRARY_SOURCES} )
-set_target_properties( mutable_static
-    PROPERTIES
-    COMPILE_OPTIONS          "${MUTABLE_COMPILE_OPTIONS}"
-)
-target_link_libraries( mutable_static ${MUTABLE_LIBS}  )
 
-
-add_executable( mutable src/main.cc )
+add_executable( mutable src/main.cc ${MUTABLE_LIBRARY_SOURCES} )
 set_target_properties( mutable
     PROPERTIES
     COMPILE_OPTIONS          "${MUTABLE_COMPILE_OPTIONS}"
 )
-target_link_libraries( mutable mutable_static )
-
-
+target_link_libraries( mutable ${MUTABLE_LIBS} )
 

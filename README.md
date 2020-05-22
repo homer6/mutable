@@ -18,6 +18,7 @@ apt update -y && \
     apt install -y git gcc g++ cmake pkg-config libssl-dev libsasl2-dev \
                    python ccache libmysqlcppconn-dev libmysqlclient-dev \
                    libpq-dev
+apt remove -y libpqxx-dev
 
 git clone --recursive https://github.com/homer6/mutable.git
 cd mutable
@@ -82,7 +83,7 @@ cd lib/redis-plus-plus && \
     ldconfig && \
     cd ../..
 
-RUN rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake
+rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake
 
 cmake .
 make -j12
