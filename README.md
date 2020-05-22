@@ -14,57 +14,75 @@ Build Ubuntu 18
 ---------------
 
 ```
-sudo apt install git gcc g++ cmake pkg-config libssl-dev libsasl2-dev python ccache libmysqlcppconn-dev libmysqlclient-dev libpq-dev
+apt update -y && \
+    apt install -y git gcc g++ cmake pkg-config libssl-dev libsasl2-dev \
+                   python ccache libmysqlcppconn-dev libmysqlclient-dev \
+                   libpq-dev
+
 git clone --recursive https://github.com/homer6/mutable.git
 cd mutable
+git submodule update --init --recursive
 
-cd lib/libmongoc
-git checkout debian/1.15.2-1
-python build/calc_release_version.py > VERSION_CURRENT
-mkdir cmake-build
-cd cmake-build
-cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ..
-sudo make -j12 install
-cd ../../..
+cd lib/libmongoc && \
+    git checkout debian/1.15.2-1 && \
+    python build/calc_release_version.py > VERSION_CURRENT && \
+    rm -rf cmake-build && \
+    mkdir -p cmake-build && \
+    cd cmake-build && \
+    cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF .. && \
+    make -j4 install && \
+    cd ../../..
 
-cd lib/mongocxx-driver/build
-git checkout debian/3.4.1-1
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
-sudo make -j12 install
-cd ../../..
+cd lib/mongocxx-driver/build && \
+    git checkout debian/3.4.1-1 && \
+    rm -rf * && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local && \
+    make -j4 install && \
+    cd ../../..
 
-cd lib/libpqxx
-git checkout 7.0.5
-mkdir build
-cmake -DPostgreSQL_TYPE_INCLUDE_DIR:STRING=/usr/include/postgresql ..
-sudo make -j12 install
-cd ../../..
-ldconfig
+cd lib/libpqxx && \
+    git checkout 7.1.1 && \
+    rm -rf build && \
+    mkdir build && \
+    cd build && \
+    cmake -DPostgreSQL_TYPE_INCLUDE_DIR:STRING=/usr/include/postgresql .. && \
+    make -j4 install && \
+    cd ../../.. && \
+    ldconfig
 
-sudo apt install -y libssl-dev libboost-all-dev libsasl2-dev liblz4-dev libzstd-dev
-cd lib/librdkafka
-git checkout v1.4.2
-./configure --install-deps
-make -j12
-make install
-ldconfig
-cd ../..
+apt install -y libssl-dev libboost-all-dev libsasl2-dev liblz4-dev libzstd-dev && \
+    cd lib/librdkafka && \
+    git checkout v1.4.2 && \
+    ./configure --install-deps && \
+    make -j4 && \
+    make install && \
+    ldconfig && \
+    cd ../..
 
-cd lib/hiredis
-git checkout v0.14.1
-make -j12
-make install
-ldconfig
-cd ../..
+cd lib/cppkafka && \
+    git checkout 006642cdb2a871ef3aad517e9148607b859604e0 && \
+    cmake . && \
+    make -j4 && \
+    make install && \
+    ldconfig && \
+    cd ../..
 
-cd lib/redis-plus-plus
-git checkout f7b0ce9588e9c8a9fdb0ae97a663d9b5e9b13f85
-git clean -fd
-cmake -DREDIS_PLUS_PLUS_CXX_STANDARD=17 .
-make -j12
-make install
-ldconfig
-cd ../..
+cd lib/hiredis && \
+    git checkout v0.14.1 && \
+    make -j4 && \
+    make install && \
+    cd ../..
+
+cd lib/redis-plus-plus && \
+    git checkout f7b0ce9588e9c8a9fdb0ae97a663d9b5e9b13f85 && \
+    git clean -fd && \
+    cmake -DREDIS_PLUS_PLUS_CXX_STANDARD=17 . && \
+    make -j4 && \
+    make install && \
+    ldconfig && \
+    cd ../..
+
+RUN rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake
 
 cmake .
 make -j12
@@ -90,18 +108,18 @@ Publishing to dockerhub (after building)
 ```
 docker login
 
-docker tag mutable_base:latest homer6/mutable_base:v4
+docker tag mutable_base:latest homer6/mutable_base:v5
 docker tag mutable_base:latest homer6/mutable_base:latest
-docker tag mutable_build:latest homer6/mutable_build:v4
+docker tag mutable_build:latest homer6/mutable_build:v5
 docker tag mutable_build:latest homer6/mutable_build:latest
-docker tag mutable:latest homer6/mutable:v0.3.0
+docker tag mutable:latest homer6/mutable:v0.3.1
 docker tag mutable:latest homer6/mutable:latest
 
-docker push homer6/mutable_base:v4
+docker push homer6/mutable_base:v5
 docker push homer6/mutable_base:latest
-docker push homer6/mutable_build:v4
+docker push homer6/mutable_build:v5
 docker push homer6/mutable_build:latest
-docker push homer6/mutable:v0.3.0
+docker push homer6/mutable:v0.3.1
 docker push homer6/mutable:latest
 
 

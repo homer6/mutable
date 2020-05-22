@@ -28,7 +28,7 @@ RUN cd lib/mongocxx-driver/build && \
     cd ../../..
 
 RUN cd lib/libpqxx && \
-    git checkout 7.0.5 && \
+    git checkout 7.1.1 && \
     rm -rf build && \
     mkdir build && \
     cd build && \
