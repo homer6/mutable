@@ -24,6 +24,8 @@ using mtbl::chains::mtbl::MutableChain;
 using mtbl::consumers::EchoConsumer;
 
 
+#include "utils/Common.h"
+
 #include <cppkafka/cppkafka.h>
 
 #include "args.hxx"
@@ -55,6 +57,8 @@ namespace mtbl{
 		args::Command mutate_command( commands, "mutate", "delare a chain to be a mutation state" );
 		args::Positional<string> mutate_chain( mutate_command, "chain", "name of chain to mutate" );
 		args::Positional<int32_t> mutate_version( mutate_command, "version", "declared " );
+
+		args::Command init_command( commands, "init", "launches a mutation via kafka" );
 
 		args::Command test_command( commands, "test", "perform a test" );
 		args::Positional<string> test_name( test_command, "name", "name of the test" );
@@ -104,6 +108,10 @@ namespace mtbl{
 				this->mutate_version = args::get( mutate_version );
 			}
 
+			if( init_command ){
+				this->command = "init";
+			}
+
 			if( test_command ){
 				this->command = "test";
 				this->test_name = args::get( test_name );
@@ -143,6 +151,44 @@ namespace mtbl{
 			};
 
 			this->publishKafkaMessage( "mutable_control", mutation_delcaration );
+
+		}
+
+
+		if( this->command == "init" ){
+
+			map<string,int64_t> chains;
+
+			for( const auto& [key, value] : this->environment_variables ){
+
+				const string lower_key = mtbl::utils::common::to_lower(key);
+
+				if( lower_key.rfind("chain_", 0) == 0 ){
+
+					// starts with prefix "chain_"
+					string chain_key = lower_key.substr( 6 );
+
+					int64_t chain_state = std::stoll( value );
+
+					chains.insert( { chain_key, chain_state } );
+				}
+
+			}
+
+
+
+			for( const auto& [key, value] : chains ){
+
+				json mutation_delcaration{
+					{ "operation", "mutate" },
+					{ "environment_prefix", this->environment_prefix },
+					{ "chain", key },
+					{ "version", value }
+				};
+
+				this->publishKafkaMessage( "mutable_control", mutation_delcaration );
+
+			}
 
 		}
 

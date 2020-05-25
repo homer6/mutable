@@ -37,6 +37,8 @@ namespace mtbl::utils::common{
 
 	string escape_to_json_string( const string& unescaped_string );
 
+	string to_lower( const string& input );
+
 
 	string encodeBase64( const string& binary_data );
 

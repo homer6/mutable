@@ -70,7 +70,7 @@ COPY --from=0 \
     /usr/lib/x86_64-linux-gnu/libffi.so.6 \
     /lib/
 
-COPY build/mutable .
+COPY --from=0 /mutable/build/mutable .
 
 ENTRYPOINT [ "./mutable" ]
 

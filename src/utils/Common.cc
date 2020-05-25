@@ -32,6 +32,11 @@ using std::endl;
 #include <time.h>
 
 
+#include <algorithm>
+#include <cctype>
+#include <string>
+
+
 namespace mtbl::utils::common{
 
 
@@ -233,6 +238,23 @@ namespace mtbl::utils::common{
         return escaped_string;
 
     }
+
+
+	string to_lower( const string& input ){
+
+		string result;
+
+		std::transform(
+			input.begin(), 
+			input.end(), 
+			result.begin(),
+			[](unsigned char c){ return std::tolower(c); }
+    	);
+
+    	return result;
+
+	}
+
 
 
     string get_timestamp( const string format ){
