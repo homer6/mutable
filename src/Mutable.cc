@@ -11,6 +11,8 @@ using std::endl;
 
 #include <stdexcept>
 
+#include <chrono>
+
 extern char **environ;
 
 
@@ -151,6 +153,7 @@ namespace mtbl{
 			};
 
 			this->publishKafkaMessage( "mutable_control", mutation_delcaration );
+			this->main_producer->producer.flush( std::chrono::milliseconds(5000) );
 
 		}
 
@@ -162,6 +165,8 @@ namespace mtbl{
 			for( const auto& [key, value] : this->environment_variables ){
 
 				const string lower_key = mtbl::utils::common::to_lower(key);
+
+				//cout << "Before: " << lower_key << ": " << value << endl;
 
 				if( lower_key.rfind("chain_", 0) == 0 ){
 
@@ -193,6 +198,8 @@ namespace mtbl{
 
 			}
 
+			this->main_producer->producer.flush( std::chrono::milliseconds(5000) );
+
 		}
 
 
@@ -207,6 +214,7 @@ namespace mtbl{
 			};
 
 			this->publishKafkaMessage( "mutable_control", walk_command );
+			this->main_producer->producer.flush( std::chrono::milliseconds(5000) );
 
 		}
 
@@ -427,8 +435,7 @@ namespace mtbl{
 			namespaced_topic = this->environment_prefix + "_" + topic;
 		}
 
-		this->main_producer->producer.produce( cppkafka::MessageBuilder(namespaced_topic).partition(-1).payload(message_contents) );
-		this->main_producer->producer.flush();
+		this->main_producer->producer.produce( cppkafka::MessageBuilder(namespaced_topic).partition(-1).payload(message_contents) );		
 
 	}
 
