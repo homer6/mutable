@@ -171,6 +171,9 @@ namespace mtbl{
 					int64_t chain_state = std::stoll( value );
 
 					chains.insert( { chain_key, chain_state } );
+
+					cout << "Adding chain states: " << chain_key << ": " << chain_state << endl;
+
 				}
 
 			}
@@ -449,7 +452,16 @@ namespace mtbl{
 	}
 
 	unique_ptr<KafkaConsumer> Mutable::createKafkaConsumer() const{
-		return std::make_unique<KafkaConsumer>( this->broker_list, this->consume_consumer_group );
+
+		string namespaced_consumer_group;
+		if( this->environment_prefix.empty() ){
+			namespaced_consumer_group = this->consume_consumer_group;
+		}else{
+			namespaced_consumer_group = this->environment_prefix + "_" + this->consume_consumer_group;
+		}
+
+		return std::make_unique<KafkaConsumer>( this->broker_list, namespaced_consumer_group );
+
 	}
 
 	unique_ptr<RedisClient> Mutable::createRedisClient() const{

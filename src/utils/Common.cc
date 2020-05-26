@@ -242,7 +242,7 @@ namespace mtbl::utils::common{
 
 	string to_lower( const string& input ){
 
-		string result;
+		string result = input;
 
 		std::transform(
 			input.begin(), 
