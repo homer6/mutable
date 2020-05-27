@@ -89,7 +89,7 @@ namespace mtbl::consumers{
 		                try{
 		                	this->mutate( message_object );
 		                }catch( std::runtime_error &e ){
-		                	cerr << "Failed to mutate." << endl;
+		                	cerr << "Failed to mutate: " << e.what() << endl;
 		                }
 
 	                }catch( std::exception &e ){
