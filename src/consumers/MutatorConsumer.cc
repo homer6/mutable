@@ -92,7 +92,7 @@ namespace mtbl::consumers{
 		                	cerr << "Failed to mutate." << endl;
 		                }
 
-	                }catch( std::runtime_error &e ){
+	                }catch( std::exception &e ){
 	                	cerr << "Failed to parse json message." << endl;
 	                }
 

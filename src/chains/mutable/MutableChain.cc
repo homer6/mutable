@@ -80,7 +80,7 @@ namespace mtbl{
 		try{
 			pqxx::work transaction( this->postgres_client.postgres_connection );
 			transaction.exec0( "INSERT INTO mutable_chains ( name, current_state, created_at, updated_at ) VALUES ( " + transaction.quote(chain_name) + ", 0, NOW(), NOW() )" );
-		}catch( std::runtime_error& e ){
+		}catch( std::exception &e ){
 			cerr << e.what() << endl;
 		}
 
@@ -92,7 +92,7 @@ namespace mtbl{
 		try{
 			pqxx::work transaction( this->postgres_client.postgres_connection );
 			transaction.exec0( "DELETE FROM mutable_chains WHERE name = " + transaction.quote(chain_name) );
-		}catch( std::runtime_error& e ){
+		}catch( std::exception &e ){
 			cerr << e.what() << endl;
 		}
 
@@ -107,7 +107,7 @@ namespace mtbl{
 			pqxx::work transaction( this->postgres_client.postgres_connection );
 			pqxx::row current_row = transaction.exec1( "SELECT current_state FROM mutable_chains WHERE name = " + transaction.quote(chain_name) );
 			current_state = current_row[0].as<int64_t>();
-		}catch( std::runtime_error& e ){
+		}catch( std::exception &e ){
 			cerr << e.what() << endl;
 		}
 
@@ -121,7 +121,7 @@ namespace mtbl{
 		try{
 			pqxx::work transaction( this->postgres_client.postgres_connection );
 			transaction.exec0( "UPDATE mutable_chains SET current_state = " + transaction.quote(new_state) + " WHERE name = " + transaction.quote(chain_name) );
-		}catch( std::runtime_error& e ){
+		}catch( std::exception &e ){
 			cerr << e.what() << endl;
 		}
 
