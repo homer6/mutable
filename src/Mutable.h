@@ -72,6 +72,8 @@ namespace mtbl{
 
 			void connectKafkaProducer();
 
+			string addEnvironmentPrefix( const string value ) const;			
+
 
 		protected:
 			map<string,string> environment_variables;

@@ -19,11 +19,11 @@ extern char **environ;
 #include "tailers/MongoTailer.h"
 using mtbl::tailer::MongoTailer;
 
-#include "chains/mutable/MutableChain.h"
-using mtbl::chains::mtbl::MutableChain;
-
 #include "consumers/EchoConsumer.h"
 using mtbl::consumers::EchoConsumer;
+
+#include "consumers/MutatorConsumer.h"
+using mtbl::consumers::MutatorConsumer;
 
 
 #include "utils/Common.h"
@@ -256,19 +256,26 @@ namespace mtbl{
 			}
 
 
-
-
 			if( this->consume_type == "echo" ){
 
 				auto kafka_consumer = this->createKafkaConsumer();
 
-				EchoConsumer echo_consumer{ std::move(kafka_consumer), this->consume_topic };
+				EchoConsumer echo_consumer{ std::move(kafka_consumer), this->addEnvironmentPrefix(this->consume_topic) };
 				echo_consumer.consume();
+
+
+			}else if( this->consume_type == "mutator" ){
+
+				auto kafka_consumer = this->createKafkaConsumer();
+
+				MutatorConsumer mutator_consumer{ std::move(kafka_consumer), this->addEnvironmentPrefix(this->consume_topic), this };
+				mutator_consumer.consume();
 
 			}else{
 				
 				cerr << "Unknown consumer type. Supported consumers: " << endl
 					 << "   echo" << endl
+					 << "   mutator" << endl
 					 << endl;
 				return false;
 
@@ -356,21 +363,6 @@ namespace mtbl{
 
 		}
 
-
-
-
-
-		/*
-		PostgresClient postgres_client( postgres_connection );
-		
-
-		MutableChain mutable_chain( postgres_client );
-
-		mutable_chain.runMutations( 0, 1 );
-
-		*/
-
-
 		return true;
 
 	}
@@ -428,14 +420,7 @@ namespace mtbl{
 		this->connectKafkaProducer();
 		const string message_contents = message.dump();
 
-		string namespaced_topic;
-		if( this->environment_prefix.empty() ){
-			namespaced_topic = topic;
-		}else{
-			namespaced_topic = this->environment_prefix + "_" + topic;
-		}
-
-		this->main_producer->producer.produce( cppkafka::MessageBuilder(namespaced_topic).partition(-1).payload(message_contents) );		
+		this->main_producer->producer.produce( cppkafka::MessageBuilder(this->addEnvironmentPrefix(topic)).partition(-1).payload(message_contents) );		
 
 	}
 
@@ -460,14 +445,7 @@ namespace mtbl{
 
 	unique_ptr<KafkaConsumer> Mutable::createKafkaConsumer() const{
 
-		string namespaced_consumer_group;
-		if( this->environment_prefix.empty() ){
-			namespaced_consumer_group = this->consume_consumer_group;
-		}else{
-			namespaced_consumer_group = this->environment_prefix + "_" + this->consume_consumer_group;
-		}
-
-		return std::make_unique<KafkaConsumer>( this->broker_list, namespaced_consumer_group );
+		return std::make_unique<KafkaConsumer>( this->broker_list, this->addEnvironmentPrefix(this->consume_consumer_group) );
 
 	}
 
@@ -486,5 +464,20 @@ namespace mtbl{
 			this->main_producer.reset( new KafkaProducer(this->broker_list) );
 		}
 	}
+
+
+	string Mutable::addEnvironmentPrefix( const string value ) const{
+
+		string namespaced_value;
+		if( this->environment_prefix.empty() ){
+			namespaced_value = value;
+		}else{
+			namespaced_value = this->environment_prefix + "_" + value;
+		}
+
+		return namespaced_value;
+
+	}
+
 
 }

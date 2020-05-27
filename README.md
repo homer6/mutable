@@ -113,14 +113,14 @@ docker tag mutable_base:latest homer6/mutable_base:v5
 docker tag mutable_base:latest homer6/mutable_base:latest
 docker tag mutable_build:latest homer6/mutable_build:v5
 docker tag mutable_build:latest homer6/mutable_build:latest
-docker tag mutable:latest homer6/mutable:v0.3.1
+docker tag mutable:latest homer6/mutable:v0.3.2
 docker tag mutable:latest homer6/mutable:latest
 
 docker push homer6/mutable_base:v5
 docker push homer6/mutable_base:latest
 docker push homer6/mutable_build:v5
 docker push homer6/mutable_build:latest
-docker push homer6/mutable:v0.3.1
+docker push homer6/mutable:v0.3.2
 docker push homer6/mutable:latest
 
 
