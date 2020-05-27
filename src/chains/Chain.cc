@@ -8,12 +8,12 @@ namespace chains{
 
 	bool Chain::runMutations( const int64_t actual_state, const int64_t desired_state ){
 
-		if( desired_state < 0 ){
-			throw std::runtime_error( "Desired state must be non-negative." );
+		if( desired_state < -1 ){
+			throw std::runtime_error( "Desired state must be greater than -2." );
 		}
 
-		if( actual_state < 0 ){
-			throw std::runtime_error( "Actual state must be non-negative." );
+		if( actual_state < -1 ){
+			throw std::runtime_error( "Actual state must be greater than -2." );
 		}
 
 		if( desired_state == actual_state ){
